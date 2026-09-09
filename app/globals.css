@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* No git repo here, so Tailwind v4's automatic content detection misses the
+   source tree — point it at the app explicitly. */
+@source "../app/**/*.{ts,tsx}";
+@source "../components/**/*.{ts,tsx}";
+
+/* Design tokens — derived directly from DESIGN.md (Atelier Jurídico Editorial).
+   Warm Editorial Minimalism: sharp 0px corners, 1px hairlines, zero heavy shadows. */
+@theme {
+  --color-canvas: #fbf9f6;          /* surface-canvas — dominant background */
+  --color-canvas-dim: #e8dfd8;      /* tertiary neutral */
+  --color-subtle: #f4efea;          /* surface-subtle — alternate bands */
+  --color-card: #ffffff;            /* surface-card */
+  --color-espresso: #3d2b1f;        /* primary — accent of authority */
+  --color-espresso-deep: #231f20;   /* neutral charcoal / primary hover */
+  --color-hazel: #8c6249;           /* secondary — micro-accents, active states */
+  --color-ink: #231f20;             /* long-form body text */
+  --color-error: #ba1a1a;
+
+  --font-serif: var(--font-playfair), ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --container-max: 1320px;
+}
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  border-radius: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* Editorial titling — Playfair Display, regular/medium only (DESIGN.md typographic principle). */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--color-espresso);
+}
+
+/* Utilitarian labels / kickers — uppercase Plus Jakarta Sans, generous tracking. */
+.label-caps {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-hazel);
+}
+
+.hairline {
+  border-color: rgba(61, 43, 31, 0.12);
+}
+
+.prose-editorial {
+  max-width: 68ch;
+  font-size: 18px;
+  line-height: 1.75;
+}
+.prose-editorial h2 { font-size: 32px; margin: 2.5rem 0 1rem; }
+.prose-editorial h3 { font-size: 24px; font-weight: 500; margin: 2rem 0 0.75rem; }
+.prose-editorial p { margin: 1.15rem 0; }
+.prose-editorial a { color: var(--color-hazel); text-decoration: underline; text-underline-offset: 3px; }
+.prose-editorial ul, .prose-editorial ol { margin: 1.15rem 0; padding-left: 1.5rem; }
+.prose-editorial li { margin: 0.4rem 0; }
+.prose-editorial blockquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 24px;
+  border-left: 1px solid var(--color-hazel);
+  padding-left: 2rem;
+  margin: 2rem 0;
+  color: var(--color-espresso);
+}
+.prose-editorial img { border: 1px solid rgba(61, 43, 31, 0.12); }
