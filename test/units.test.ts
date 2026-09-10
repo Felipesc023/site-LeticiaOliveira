@@ -6,6 +6,7 @@ import { slugify } from "../lib/slug.ts";
 import { extractJson } from "../lib/json.ts";
 import { resolvePublish } from "../lib/publish.ts";
 import { whatsappUrl } from "../lib/config.ts";
+import { sanitizeArticleHtml, looksLikeHtml } from "../lib/html.ts";
 
 test("slugify strips accents, lowercases, hyphenates", () => {
   assert.equal(
@@ -59,4 +60,30 @@ test("resolvePublish: scheduled without a date is an error", () => {
 test("whatsappUrl adds an encoded ?text only when a message is given", () => {
   assert.ok(!whatsappUrl().includes("?"));
   assert.match(whatsappUrl("olá, tudo bem?"), /\?text=ol%C3%A1%2C%20tudo%20bem%3F$/);
+});
+
+test("sanitizeArticleHtml keeps allowed tags, drops the rest and stray attrs", () => {
+  const dirty =
+    '<h2 onclick="x()">T</h2><script>evil()</script>' +
+    '<p class="z" style="color:red">ok <a href="https://a.com" target="_blank">link</a> ' +
+    '<a href="javascript:alert(1)">bad</a></p>' +
+    '<aside data-callout="dica"><p>tip</p></aside>' +
+    '<aside data-callout="hax"><p>x</p></aside><div>nope</div>';
+  const clean = sanitizeArticleHtml(dirty);
+  assert.equal(clean.includes("<script>"), false);
+  assert.equal(clean.includes("onclick"), false);
+  assert.equal(clean.includes('class="z"'), false);
+  assert.equal(clean.includes("<div>"), false);
+  assert.match(clean, /<h2>T<\/h2>/);
+  assert.match(clean, /<a href="https:\/\/a\.com">link<\/a>/);
+  assert.match(clean, /<a>bad<\/a>/); // javascript: url stripped
+  assert.match(clean, /<aside data-callout="dica">/);
+  assert.match(clean, /<aside data-callout="aviso">/); // unknown kind -> aviso
+});
+
+test("looksLikeHtml tells editor HTML from markdown seeds", () => {
+  assert.equal(looksLikeHtml("<p>oi</p>"), true);
+  assert.equal(looksLikeHtml('  <aside data-callout="dica">x</aside>'), true);
+  assert.equal(looksLikeHtml("## Título\n\nParágrafo em markdown."), false);
+  assert.equal(looksLikeHtml("Texto simples com <strong>negrito</strong>."), false);
 });

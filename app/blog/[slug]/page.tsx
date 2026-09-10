@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getArticle, relatedArticles } from "@/lib/articles";
-import { renderMarkdown } from "@/lib/markdown";
+import { renderArticle } from "@/lib/markdown";
 import { categoryLabel, SITE, whatsappUrl } from "@/lib/config";
 import { CoverImage } from "@/components/cover-image";
 import { ArticleCard } from "@/components/article-card";
@@ -90,7 +90,7 @@ export default async function ArticlePage({
 
       <div
         className="prose-editorial mx-auto mt-14 px-5"
-        dangerouslySetInnerHTML={{ __html: renderMarkdown(article.content) }}
+        dangerouslySetInnerHTML={{ __html: renderArticle(article.content) }}
       />
 
       <div className="mx-auto mt-12 flex max-w-3xl flex-wrap items-center gap-4 px-5">

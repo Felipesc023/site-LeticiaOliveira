@@ -22,14 +22,6 @@ export type ArticleInput = Omit<
   "id" | "created_at" | "updated_at"
 >;
 
-/** One AI editorial suggestion, anchored to a quoted snippet (RF-011). */
-export interface AiComment {
-  id: string;
-  quote: string; // verbatim slice of the draft the note refers to
-  comment: string; // the suggestion
-  kind: "clareza" | "impacto" | "juridiquês" | "estrutura" | "outro";
-}
-
 export interface AiSeo {
   meta_description: string;
   slug: string;

@@ -1,4 +1,5 @@
 import { marked } from "marked";
+import { looksLikeHtml } from "@/lib/html";
 
 marked.setOptions({ gfm: true, breaks: false });
 
@@ -6,6 +7,12 @@ marked.setOptions({ gfm: true, breaks: false });
     Content is written only by allowlisted admins (RN-001), so no sanitizer dep. */
 export function renderMarkdown(md: string): string {
   return marked.parse(md, { async: false }) as string;
+}
+
+/** New articles are saved as HTML by the rich editor; older seed rows are
+    markdown. Render either without a migration. */
+export function renderArticle(content: string): string {
+  return looksLikeHtml(content) ? content : renderMarkdown(content);
 }
 
 /** ~200 wpm reading estimate — used internally only, never shown (DESIGN.md §21). */

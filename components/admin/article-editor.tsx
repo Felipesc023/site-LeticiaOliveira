@@ -1,14 +1,15 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useRef, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { marked } from "marked";
+import Image from "next/image";
+import { Sparkles, ImageIcon, Trash2 } from "lucide-react";
 import { saveArticle, deleteArticle, type SaveResult } from "@/app/admin/actions";
 import { CATEGORIES } from "@/lib/config";
 import { slugify } from "@/lib/slug";
-import type { Article, AiComment } from "@/lib/types";
-
-marked.setOptions({ gfm: true, breaks: false });
+import type { Article } from "@/lib/types";
+import { RichEditor } from "@/components/admin/rich-editor";
+import { ImagePicker } from "@/components/admin/image-picker";
 
 type Props = { article?: Article };
 
@@ -25,17 +26,16 @@ export function ArticleEditor({ article }: Props) {
   const [content, setContent] = useState(article?.content ?? "");
   const [metaDescription, setMetaDescription] = useState(article?.meta_description ?? "");
   const [keywords, setKeywords] = useState((article?.keywords ?? []).join(", "));
+  const [coverUrl, setCoverUrl] = useState(article?.cover_url ?? "");
+  const [coverCredit, setCoverCredit] = useState(article?.cover_credit ?? "");
   const [status, setStatus] = useState(article?.status ?? "draft");
   const [publishedAt, setPublishedAt] = useState(
     article?.published_at ? toLocalInput(article.published_at) : "",
   );
-  const [showPreview, setShowPreview] = useState(false);
 
-  const [comments, setComments] = useState<AiComment[]>([]);
-  const [autoReview, setAutoReview] = useState(false);
-  const [aiBusy, setAiBusy] = useState<"review" | "seo" | null>(null);
-  const [aiError, setAiError] = useState<string | null>(null);
-  const lastReviewed = useRef("");
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [aiBusy, setAiBusy] = useState<"optimize" | "seo" | null>(null);
+  const [aiMsg, setAiMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (!slugTouched && title) setSlug(slugify(title));
@@ -45,21 +45,27 @@ export function ArticleEditor({ article }: Props) {
     if (state?.ok) router.push("/admin");
   }, [state, router]);
 
-  async function runReview() {
-    setAiBusy("review");
-    setAiError(null);
+  async function runOptimize() {
+    setAiBusy("optimize");
+    setAiMsg(null);
     try {
-      const res = await fetch("/api/ai/review", {
+      const res = await fetch("/api/ai/optimize", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({ title, draft: content }),
       });
       const data = await res.json();
-      if (!res.ok) setAiError(data.error ?? "Falha na revisão");
-      setComments(data.comments ?? []);
-      lastReviewed.current = content;
+      if (!res.ok) {
+        setAiMsg(data.error ?? "Falha ao otimizar");
+        return;
+      }
+      setContent(data.html);
+      if (data.meta_description) setMetaDescription(data.meta_description);
+      if (Array.isArray(data.keywords)) setKeywords(data.keywords.join(", "));
+      if (!slugTouched && data.slug) setSlug(slugify(data.slug));
+      setAiMsg("Artigo revisado e formatado. Revise antes de publicar.");
     } catch {
-      setAiError("Falha na revisão");
+      setAiMsg("Falha ao otimizar");
     } finally {
       setAiBusy(null);
     }
@@ -67,7 +73,7 @@ export function ArticleEditor({ article }: Props) {
 
   async function runSeo() {
     setAiBusy("seo");
-    setAiError(null);
+    setAiMsg(null);
     try {
       const res = await fetch("/api/ai/seo", {
         method: "POST",
@@ -76,40 +82,27 @@ export function ArticleEditor({ article }: Props) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setAiError(data.error ?? "Falha na sugestão");
+        setAiMsg(data.error ?? "Falha na sugestão");
         return;
       }
       setMetaDescription(data.meta_description ?? metaDescription);
       setKeywords((data.keywords ?? []).join(", "));
-      if (!slugTouched && data.slug) {
-        setSlug(slugify(data.slug));
-      }
+      if (!slugTouched && data.slug) setSlug(slugify(data.slug));
+      setAiMsg("Metadados sugeridos.");
     } catch {
-      setAiError("Falha na sugestão");
+      setAiMsg("Falha na sugestão");
     } finally {
       setAiBusy(null);
     }
   }
 
-  // Automatic review while writing (§27/§28) — debounced, only on real change.
-  useEffect(() => {
-    if (!autoReview) return;
-    if (content.trim().length < 120) return;
-    if (content === lastReviewed.current) return;
-    const t = setTimeout(runReview, 2500);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content, autoReview]);
-
-  const previewHtml = useMemo(
-    () => (showPreview ? (marked.parse(content, { async: false }) as string) : ""),
-    [showPreview, content],
-  );
-
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+    <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
       <form action={formAction} className="space-y-6">
         {article && <input type="hidden" name="id" value={article.id} />}
+        <input type="hidden" name="content" value={content} />
+        <input type="hidden" name="cover_url" value={coverUrl} />
+        <input type="hidden" name="cover_credit" value={coverCredit} />
 
         <Field label="Título">
           <input
@@ -148,59 +141,45 @@ export function ArticleEditor({ article }: Props) {
           </Field>
         </div>
 
-        <Field label="Conteúdo (markdown)">
-          <div className="mb-2 flex gap-3 text-xs">
-            <button
-              type="button"
-              onClick={() => setShowPreview(false)}
-              className={!showPreview ? "text-espresso underline" : "text-hazel"}
-            >
-              Escrever
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowPreview(true)}
-              className={showPreview ? "text-espresso underline" : "text-hazel"}
-            >
-              Pré-visualizar
-            </button>
-          </div>
-          {showPreview ? (
-            <div
-              className="prose-editorial min-h-[320px] border hairline bg-card p-4"
-              dangerouslySetInnerHTML={{ __html: previewHtml }}
-            />
-          ) : (
-            <textarea
-              name="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={18}
-              className="w-full border hairline bg-card px-3 py-2 font-mono text-sm outline-none focus:border-espresso"
-            />
-          )}
-          {/* keep content in the form even while previewing */}
-          {showPreview && <input type="hidden" name="content" value={content} />}
+        <Field label="Conteúdo">
+          <RichEditor html={content} onChange={setContent} />
         </Field>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Imagem de capa (URL) — opcional">
-            <input
-              name="cover_url"
-              defaultValue={article?.cover_url ?? ""}
-              placeholder="Unsplash/Pexels ou upload"
-              className="w-full border hairline bg-card px-3 py-2 text-sm outline-none focus:border-espresso"
-            />
-          </Field>
-          <Field label="Crédito da imagem — opcional">
-            <input
-              name="cover_credit"
-              defaultValue={article?.cover_credit ?? ""}
-              placeholder="Foto: Nome / Unsplash"
-              className="w-full border hairline bg-card px-3 py-2 text-sm outline-none focus:border-espresso"
-            />
-          </Field>
-        </div>
+        <Field label="Imagem de capa">
+          <div className="flex items-start gap-4">
+            <div className="relative aspect-[16/9] w-48 shrink-0 overflow-hidden border hairline bg-subtle">
+              {coverUrl ? (
+                <Image src={coverUrl} alt="" fill sizes="192px" className="object-cover" />
+              ) : (
+                <span className="absolute inset-0 flex items-center justify-center p-2 text-center text-[10px] text-hazel">
+                  Sem imagem — capa tipográfica de marca será usada
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => setPickerOpen(true)}
+                className="label-caps flex items-center gap-2 border border-espresso px-4 py-2 text-[11px] text-espresso hover:bg-subtle"
+              >
+                <ImageIcon size={13} /> {coverUrl ? "Trocar imagem" : "Escolher imagem"}
+              </button>
+              {coverUrl && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCoverUrl("");
+                    setCoverCredit("");
+                  }}
+                  className="label-caps flex items-center gap-2 px-1 text-[11px] text-error"
+                >
+                  <Trash2 size={13} /> Remover
+                </button>
+              )}
+              {coverCredit && <p className="text-xs text-ink/50">{coverCredit}</p>}
+            </div>
+          </div>
+        </Field>
 
         <Field label="Meta description (SEO)">
           <textarea
@@ -276,62 +255,54 @@ export function ArticleEditor({ article }: Props) {
         </div>
       </form>
 
-      {/* AI editorial side panel (RF-011: comments beside the text) */}
       <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
         <div className="border hairline bg-card p-4">
           <p className="label-caps text-hazel">Assistente editorial</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={runReview}
-              disabled={aiBusy !== null}
-              className="label-caps border border-espresso px-3 py-2 text-[10px] text-espresso disabled:opacity-40"
-            >
-              {aiBusy === "review" ? "Revisando…" : "Revisar texto"}
-            </button>
-            <button
-              type="button"
-              onClick={runSeo}
-              disabled={aiBusy !== null}
-              className="label-caps border border-espresso px-3 py-2 text-[10px] text-espresso disabled:opacity-40"
-            >
-              {aiBusy === "seo" ? "Gerando…" : "Sugerir SEO"}
-            </button>
-          </div>
-          <label className="mt-3 flex items-center gap-2 text-xs text-ink/60">
-            <input
-              type="checkbox"
-              checked={autoReview}
-              onChange={(e) => setAutoReview(e.target.checked)}
-            />
-            Revisar automaticamente enquanto escrevo
-          </label>
-          {aiError && <p className="mt-2 text-xs text-error">{aiError}</p>}
+          <p className="mt-2 text-xs leading-relaxed text-ink/60">
+            Cole o rascunho no editor e deixe a IA revisar o texto, aplicar a
+            formatação, inserir destaques (avisos, dicas e termos) e preencher o
+            SEO. Você revisa antes de publicar.
+          </p>
+          <button
+            type="button"
+            onClick={runOptimize}
+            disabled={aiBusy !== null}
+            className="label-caps mt-4 flex w-full items-center justify-center gap-2 border border-espresso bg-espresso px-4 py-3 text-[11px] text-canvas disabled:opacity-40"
+          >
+            <Sparkles size={14} />
+            {aiBusy === "optimize" ? "Otimizando…" : "Otimizar e formatar"}
+          </button>
+          <button
+            type="button"
+            onClick={runSeo}
+            disabled={aiBusy !== null}
+            className="label-caps mt-2 w-full border border-espresso px-4 py-2 text-[11px] text-espresso hover:bg-subtle disabled:opacity-40"
+          >
+            {aiBusy === "seo" ? "Gerando…" : "Só sugerir SEO"}
+          </button>
+          {aiMsg && <p className="mt-3 text-xs text-hazel">{aiMsg}</p>}
         </div>
 
-        {comments.length > 0 && (
-          <div className="space-y-3">
-            {comments.map((c) => (
-              <div key={c.id} className="border hairline bg-card p-3 text-sm">
-                <span className="label-caps text-[9px] text-hazel">{c.kind}</span>
-                <p className="mt-1 border-l-2 border-canvas-dim pl-2 text-xs italic text-ink/60">
-                  “{c.quote}”
-                </p>
-                <p className="mt-2 text-ink/85">{c.comment}</p>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setComments((prev) => prev.filter((x) => x.id !== c.id))
-                  }
-                  className="label-caps mt-2 text-[10px] text-hazel hover:text-espresso"
-                >
-                  Dispensar
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="border hairline bg-card p-4 text-xs leading-relaxed text-ink/55">
+          <p className="label-caps mb-2 text-hazel">Destaques</p>
+          <p>
+            <strong className="text-ink/75">⚠ Aviso legal</strong> — prazos e riscos.<br />
+            <strong className="text-ink/75">💡 Dica prática</strong> — sacadas do processo.<br />
+            <strong className="text-ink/75">📖 Dicionário</strong> — termos técnicos.
+          </p>
+          <p className="mt-2">Os botões na barra do editor inserem manualmente.</p>
+        </div>
       </aside>
+
+      {pickerOpen && (
+        <ImagePicker
+          onClose={() => setPickerOpen(false)}
+          onSelect={({ url, credit }) => {
+            setCoverUrl(url);
+            setCoverCredit(credit);
+          }}
+        />
+      )}
     </div>
   );
 }
