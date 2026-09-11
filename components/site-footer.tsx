@@ -1,12 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { whatsappUrl } from "@/lib/config";
+import { Reveal } from "@/components/reveal";
+
+const NAV = [
+  { href: "/", label: "Início" },
+  { href: "/sobre", label: "Sobre" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contato", label: "Contato" },
+  { href: "/politicas", label: "Políticas" },
+];
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="mt-24 bg-espresso text-canvas/80">
-      <div className="mx-auto max-w-[var(--container-max)] px-5 py-16 md:px-20">
+      <Reveal className="mx-auto max-w-[var(--container-max)] px-5 py-16 md:px-20">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <Image
@@ -25,11 +34,16 @@ export function SiteFooter() {
           <nav className="text-sm">
             <p className="label-caps mb-4 text-canvas/60">Navegação</p>
             <ul className="space-y-2">
-              <li><Link href="/" className="hover:text-canvas">Início</Link></li>
-              <li><Link href="/sobre" className="hover:text-canvas">Sobre</Link></li>
-              <li><Link href="/blog" className="hover:text-canvas">Blog</Link></li>
-              <li><Link href="/contato" className="hover:text-canvas">Contato</Link></li>
-              <li><Link href="/politicas" className="hover:text-canvas">Políticas</Link></li>
+              {NAV.map((n) => (
+                <li key={n.href}>
+                  <Link
+                    href={n.href}
+                    className="inline-block transition-all duration-300 hover:translate-x-1 hover:text-canvas"
+                  >
+                    {n.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
 
@@ -51,7 +65,7 @@ export function SiteFooter() {
           <span>© {year} Letícia Oliveira Advocacia. Todos os direitos reservados.</span>
           <span>Atuação conforme o Código de Ética e Disciplina da OAB.</span>
         </div>
-      </div>
+      </Reveal>
     </footer>
   );
 }

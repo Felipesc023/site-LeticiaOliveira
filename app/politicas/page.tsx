@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/reveal";
 
 export const metadata: Metadata = {
   title: "Políticas de Privacidade e Termos",
@@ -10,13 +11,15 @@ export const metadata: Metadata = {
 export default function PoliticasPage() {
   return (
     <div className="mx-auto max-w-3xl px-5 py-16 md:py-24">
-      <span className="label-caps">Documento legal</span>
-      <h1 className="mt-4 font-serif text-4xl text-espresso">
-        Política de Privacidade e Termos de Uso
-      </h1>
-      <p className="mt-3 text-sm text-ink/60">
-        Última atualização: setembro de 2026.
-      </p>
+      <Reveal>
+        <span className="label-caps">Documento legal</span>
+        <h1 className="mt-4 font-serif text-4xl text-espresso">
+          Política de Privacidade e Termos de Uso
+        </h1>
+        <p className="mt-3 text-sm text-ink/60">
+          Última atualização: setembro de 2026.
+        </p>
+      </Reveal>
 
       <div className="prose-editorial mt-10 text-ink/85">
         <h2>1. Quem somos</h2>

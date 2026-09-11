@@ -21,7 +21,16 @@ const ctx = await browser.newContext({
 for (const [name, url] of pages) {
   const page = await ctx.newPage();
   await page.goto(BASE + url, { waitUntil: "networkidle" });
-  await page.waitForTimeout(600);
+  // Scroll through so IntersectionObserver-driven reveals trigger.
+  await page.evaluate(async () => {
+    const step = window.innerHeight * 0.7;
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 120));
+    }
+    window.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(800);
   await page.screenshot({ path: path.join(OUT, `${name}.png`), fullPage: true });
   console.log(name);
   await page.close();

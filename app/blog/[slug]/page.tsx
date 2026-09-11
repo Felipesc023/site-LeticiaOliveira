@@ -6,9 +6,10 @@ import { renderArticle } from "@/lib/markdown";
 import { categoryLabel, SITE, whatsappUrl } from "@/lib/config";
 import { CoverImage } from "@/components/cover-image";
 import { ArticleCard } from "@/components/article-card";
+import { Reveal } from "@/components/reveal";
 import { ShareButton } from "@/components/share-button";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -57,11 +58,11 @@ export default async function ArticlePage({
 
   return (
     <article>
-      <header className="mx-auto max-w-3xl px-5 pt-16 md:pt-24">
+      <Reveal as="header" className="mx-auto max-w-3xl px-5 pt-14 md:pt-20">
         <div className="flex items-center gap-3">
           <Link
             href={`/blog?cat=${article.category}`}
-            className="label-caps text-hazel"
+            className="nav-link label-caps text-hazel"
           >
             {categoryLabel(article.category)}
           </Link>
@@ -69,7 +70,7 @@ export default async function ArticlePage({
             <span className="text-xs text-ink/50">· {published}</span>
           )}
         </div>
-        <h1 className="mt-4 font-serif text-4xl leading-[1.15] text-espresso md:text-5xl">
+        <h1 className="mt-4 font-serif text-4xl leading-[1.12] text-espresso md:text-5xl">
           {article.title}
         </h1>
         {article.meta_description && (
@@ -77,16 +78,16 @@ export default async function ArticlePage({
             {article.meta_description}
           </p>
         )}
-      </header>
+      </Reveal>
 
-      <div className="mx-auto mt-10 max-w-4xl px-5">
+      <Reveal delay={100} className="mx-auto mt-10 max-w-4xl px-5">
         <div className="relative aspect-[16/9] border hairline">
           <CoverImage article={article} priority />
         </div>
         {article.cover_credit && (
           <p className="mt-2 text-xs text-ink/50">{article.cover_credit}</p>
         )}
-      </div>
+      </Reveal>
 
       <div
         className="prose-editorial mx-auto mt-14 px-5"
@@ -109,15 +110,19 @@ export default async function ArticlePage({
 
       {related.length > 0 && (
         <section className="mx-auto mt-24 max-w-[var(--container-max)] px-5 md:px-20">
-          <div className="border-t hairline pt-10">
-            <span className="label-caps">Mesma categoria</span>
-            <h2 className="mt-3 font-serif text-2xl text-espresso">
-              Continue a leitura
-            </h2>
-          </div>
+          <Reveal>
+            <div className="border-t hairline pt-10">
+              <span className="label-caps">Mesma categoria</span>
+              <h2 className="mt-3 font-serif text-2xl text-espresso">
+                Continue a leitura
+              </h2>
+            </div>
+          </Reveal>
           <div className="mt-8 grid gap-8 md:grid-cols-3">
-            {related.map((a) => (
-              <ArticleCard key={a.id} article={a} />
+            {related.map((a, i) => (
+              <Reveal key={a.id} delay={i * 80}>
+                <ArticleCard article={a} />
+              </Reveal>
             ))}
           </div>
         </section>

@@ -10,6 +10,7 @@ import { slugify } from "@/lib/slug";
 import type { Article } from "@/lib/types";
 import { RichEditor } from "@/components/admin/rich-editor";
 import { ImagePicker } from "@/components/admin/image-picker";
+import { AiProgress } from "@/components/admin/ai-progress";
 
 type Props = { article?: Article };
 
@@ -267,20 +268,21 @@ export function ArticleEditor({ article }: Props) {
             type="button"
             onClick={runOptimize}
             disabled={aiBusy !== null}
-            className="label-caps mt-4 flex w-full items-center justify-center gap-2 border border-espresso bg-espresso px-4 py-3 text-[11px] text-canvas disabled:opacity-40"
+            className="label-caps mt-4 flex w-full items-center justify-center gap-2 border border-espresso bg-espresso px-4 py-3 text-[11px] text-canvas transition-opacity disabled:opacity-40"
           >
-            <Sparkles size={14} />
+            <Sparkles size={14} className={aiBusy === "optimize" ? "animate-pulse" : ""} />
             {aiBusy === "optimize" ? "Otimizando…" : "Otimizar e formatar"}
           </button>
           <button
             type="button"
             onClick={runSeo}
             disabled={aiBusy !== null}
-            className="label-caps mt-2 w-full border border-espresso px-4 py-2 text-[11px] text-espresso hover:bg-subtle disabled:opacity-40"
+            className="label-caps mt-2 w-full border border-espresso px-4 py-2 text-[11px] text-espresso transition-colors hover:bg-subtle disabled:opacity-40"
           >
             {aiBusy === "seo" ? "Gerando…" : "Só sugerir SEO"}
           </button>
-          {aiMsg && <p className="mt-3 text-xs text-hazel">{aiMsg}</p>}
+          {aiBusy && <AiProgress kind={aiBusy} />}
+          {!aiBusy && aiMsg && <p className="mt-3 text-xs text-hazel">{aiMsg}</p>}
         </div>
 
         <div className="border hairline bg-card p-4 text-xs leading-relaxed text-ink/55">

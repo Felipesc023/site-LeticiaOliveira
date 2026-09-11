@@ -4,6 +4,7 @@ import { SITE } from "@/lib/config";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsappFloat } from "@/components/whatsapp-float";
+import { NavProgress } from "@/components/nav-progress";
 import { Analytics } from "@/components/analytics";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${serif.variable} ${sans.variable}`}>
       <body>
+        <NavProgress />
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
