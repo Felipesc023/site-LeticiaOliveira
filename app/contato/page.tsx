@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { Send, SearchCheck, FileCheck2, Video, Clock, Zap, MessageCircle } from "lucide-react";
+import { Send, SearchCheck, FileCheck2, Video, Clock, Zap, Phone, Mail } from "lucide-react";
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
-import { whatsappUrl } from "@/lib/config";
+import { SITE } from "@/lib/config";
+
+const ADMIN_EMAIL = "leticiafeolii@gmail.com";
+
+function formatPhone(raw: string): string {
+  const m = raw.match(/^55(\d{2})(\d{5})(\d{4})$/);
+  return m ? `+55 (${m[1]}) ${m[2]}-${m[3]}` : raw;
+}
 
 export const metadata: Metadata = {
   title: "Contato",
@@ -39,25 +46,27 @@ export default function ContatoPage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <a
-              href={whatsappUrl(
-                "Olá, Letícia. Gostaria de iniciar uma triagem de leilão. Segue o link/edital:",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group mt-8 flex items-center gap-3 border border-espresso bg-espresso px-8 py-4 text-canvas transition-all duration-300 hover:bg-espresso-deep"
-            >
-              <MessageCircle size={18} />
-              <span className="label-caps text-[12px]">Iniciar triagem</span>
-              <span className="ml-auto text-xs text-canvas/60 transition-transform group-hover:translate-x-1">
-                retorno em até 2h úteis →
-              </span>
-            </a>
+            <div className="mt-8 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-2">
+              <div className="bg-card p-6">
+                <Phone size={20} strokeWidth={1.4} className="text-hazel" />
+                <p className="label-caps mt-4 text-[10px] text-hazel">Telefone</p>
+                <p className="mt-1 font-serif text-lg text-espresso">{formatPhone(SITE.whatsapp)}</p>
+              </div>
+              <div className="bg-card p-6">
+                <Mail size={20} strokeWidth={1.4} className="text-hazel" />
+                <p className="label-caps mt-4 text-[10px] text-hazel">E-mail</p>
+                <p className="mt-1 break-all font-serif text-lg text-espresso">{ADMIN_EMAIL}</p>
+              </div>
+            </div>
           </Reveal>
 
-          <div className="mt-14 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-3">
+          <div className="mt-14 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-2 lg:grid-cols-3">
             {STEPS.map((s, i) => (
-              <Reveal key={s.t} delay={i * 90} className="bg-card p-6">
+              <Reveal
+                key={s.t}
+                delay={i * 90}
+                className={`bg-card p-6 ${i === STEPS.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
+              >
                 <s.icon size={20} strokeWidth={1.4} className="text-hazel" />
                 <h2 className="mt-4 font-serif text-lg text-espresso">
                   <span className="mr-2 text-hazel/50">0{i + 1}</span>

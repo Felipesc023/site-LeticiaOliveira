@@ -1,21 +1,21 @@
 import "server-only";
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenAI } from "@google/genai";
 import type { AiSeo } from "@/lib/types";
 import { extractJson } from "@/lib/json";
 import { sanitizeArticleHtml } from "@/lib/html";
 
 /** Model is configurable so Letícia/Felipe can trade cost for depth without a
-    code change. Defaults to the most capable model.
-    (Kept on Claude — already wired + keyed. Swap here for another provider.) */
-const MODEL = process.env.AI_MODEL || "claude-opus-5";
+    code change. Gemini free tier: generosa e sem cartão de crédito
+    (aistudio.google.com/apikey). */
+const MODEL = process.env.AI_MODEL || "gemini-3.6-flash";
 
 export class AiUnavailableError extends Error {}
 
-function client(): Anthropic {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new AiUnavailableError("ANTHROPIC_API_KEY não configurada");
+function client(): GoogleGenAI {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new AiUnavailableError("GEMINI_API_KEY não configurada");
   }
-  return new Anthropic();
+  return new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 }
 
 async function askJson<T>(
@@ -24,16 +24,16 @@ async function askJson<T>(
   shape: string,
   maxTokens = 4000,
 ): Promise<T> {
-  const res = await client().messages.create({
+  const res = await client().models.generateContent({
     model: MODEL,
-    max_tokens: maxTokens,
-    system: `${system}\n\nResponda APENAS com JSON válido, sem comentários, no formato:\n${shape}`,
-    messages: [{ role: "user", content: user }],
+    contents: user,
+    config: {
+      systemInstruction: `${system}\n\nResponda APENAS com JSON válido, sem comentários, no formato:\n${shape}`,
+      maxOutputTokens: maxTokens,
+      responseMimeType: "application/json",
+    },
   });
-  const text = res.content
-    .filter((b): b is Anthropic.TextBlock => b.type === "text")
-    .map((b) => b.text)
-    .join("");
+  const text = res.text ?? "";
   return extractJson<T>(text);
 }
 

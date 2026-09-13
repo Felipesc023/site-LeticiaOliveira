@@ -132,29 +132,36 @@ h1, h2, h3, h4 {
 .prose-editorial [data-callout="dicionario"]::before { content: "📖  Dicionário técnico"; color: var(--color-espresso); }
 
 /* ─────────────────────────────  Motion  ───────────────────────────── */
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes rise-in {
-    from { opacity: 0; transform: translateY(26px); }
-    to { opacity: 1; transform: none; }
-  }
-  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes float-y {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-  }
-  @keyframes ring-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45); }
-    70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-  }
-  @keyframes bar-indeterminate {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(400%); }
-  }
-  @keyframes shimmer {
-    to { background-position: -200% 0; }
-  }
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes ring-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45); }
+  70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+@keyframes bar-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
 
+/* Page-transition entrance (app/template.tsx). */
+.page-enter {
+  animation: rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.float-idle { animation: float-y 4.5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: no-preference) {
   /* Scroll / viewport reveal — driven by <Reveal> (IntersectionObserver). */
   [data-reveal] {
     opacity: 0;
@@ -168,13 +175,6 @@ h1, h2, h3, h4 {
     opacity: 1;
     transform: none;
   }
-
-  /* Page-transition entrance (app/template.tsx). */
-  .page-enter {
-    animation: rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .float-idle { animation: float-y 4.5s ease-in-out infinite; }
 }
 
 /* Nav underline — wipes in on hover, stays under the active link. */

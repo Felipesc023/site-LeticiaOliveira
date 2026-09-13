@@ -14,7 +14,7 @@ export function ArticleCard({
   return (
     <article className="lift group flex h-full flex-col border hairline bg-card hover:border-espresso">
       <Link href={`/blog/${article.slug}`} className="flex h-full flex-col">
-        <div className="aspect-[16/9] overflow-hidden border-b hairline">
+        <div className="relative aspect-[16/9] overflow-hidden border-b hairline">
           <div className="h-full w-full transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]">
             <CoverImage article={article} priority={priority} />
           </div>

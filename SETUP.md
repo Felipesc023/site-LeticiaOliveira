@@ -1,6 +1,6 @@
 # Site/Blog Letícia Oliveira — setup
 
-Stack: Next.js 15 (App Router) + Supabase (Postgres + Auth + Storage) + Claude para revisão editorial.
+Stack: Next.js 15 (App Router) + Supabase (Postgres + Auth + Storage) + Gemini para revisão editorial.
 
 ## Rodar local
 
@@ -20,8 +20,8 @@ npm run build                # build de produção
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | já preenchida (publishable key) | sim |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` | só para o cron de agendamento |
 | `ADMIN_ALLOWLIST` | e-mails Google autorizados, separados por vírgula | sim |
-| `ANTHROPIC_API_KEY` | console.anthropic.com | para o assistente de IA |
-| `AI_MODEL` | opcional — padrão `claude-opus-5`; use `claude-sonnet-5` para baratear | não |
+| `GEMINI_API_KEY` | aistudio.google.com/apikey (grátis, sem cartão) | para o assistente de IA |
+| `AI_MODEL` | opcional — padrão `gemini-3.6-flash` | não |
 | `NEXT_PUBLIC_WHATSAPP` | número com DDI, só dígitos (ex. `5516998770441`) | sim |
 | `NEXT_PUBLIC_GA_ID` | ID do Google Analytics (`G-XXXX`). Vazio = sem GA e sem banner | não |
 | `NEXT_PUBLIC_SITE_URL` | URL pública (canonical/OG/sitemap) | em produção |

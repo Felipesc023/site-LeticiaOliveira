@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getArticle, relatedArticles } from "@/lib/articles";
 import { renderArticle } from "@/lib/markdown";
-import { categoryLabel, SITE, whatsappUrl } from "@/lib/config";
+import { categoryLabel, SITE } from "@/lib/config";
 import { CoverImage } from "@/components/cover-image";
 import { ArticleCard } from "@/components/article-card";
 import { Reveal } from "@/components/reveal";
@@ -96,16 +96,6 @@ export default async function ArticlePage({
 
       <div className="mx-auto mt-12 flex max-w-3xl flex-wrap items-center gap-4 px-5">
         <ShareButton title={article.title} url={url} />
-        <a
-          href={whatsappUrl(
-            `Olá, Letícia. Li o artigo "${article.title}" e gostaria de tirar uma dúvida.`,
-          )}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="label-caps border border-espresso bg-espresso px-5 py-3 text-[11px] text-canvas transition-colors hover:bg-espresso-deep"
-        >
-          Analisar meu edital
-        </a>
       </div>
 
       {related.length > 0 && (

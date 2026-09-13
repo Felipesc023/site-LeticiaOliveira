@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ShieldCheck, Handshake, Scale, MapPin, BadgeCheck, Building2 } from "lucide-react";
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
-import { whatsappUrl } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -34,44 +33,42 @@ export default function SobrePage() {
             </h1>
           </Reveal>
 
-          {/* PLACEHOLDER — DESIGN.md §19 / §51: substituir pelo texto real da Letícia. */}
           <Reveal delay={100}>
             <div className="prose-editorial mt-8 text-ink/75">
               <p>
-                Sou Letícia Oliveira, dedicada integralmente aos leilões de
-                imóveis — judiciais e extrajudiciais — em todo o Brasil.
+                Sou Letícia Oliveira, formada em Direito pela Faculdade de
+                Itaúna e pós-graduada em Advocacia Notarial e Imobiliária.
               </p>
               <p>
-                Oriento investidores e famílias que buscam segurança jurídica
-                antes, durante e depois da arrematação, traduzindo um processo
-                complexo em decisões claras.
+                Comecei a estudar leilão de imóvel ainda na faculdade, em
+                2022. Não tinha muito material bom sobre o assunto na época,
+                então boa parte eu aprendi lendo edital atrás de edital,
+                errando e corrigindo o caminho. Foi trabalhoso, mas foi
+                justamente esse estudo que me deu segurança pra arrematar meus
+                primeiros imóveis.
+              </p>
+              <p>
+                Foi daí que nasceu a assessoria: juntar essa vivência prática
+                de quem já passou pelo processo com a formação jurídica, pra
+                ajudar quem quer investir em leilão a enxergar os riscos antes
+                de dar o lance — não depois.
               </p>
             </div>
-            <p className="mt-3 text-xs text-hazel">
-              Texto provisório — será substituído pelo conteúdo da Letícia.
-            </p>
           </Reveal>
 
-          <div className="mt-12 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-3">
+          <div className="mt-12 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-2 lg:grid-cols-3">
             {PRINCIPLES.map((p, i) => (
-              <Reveal key={p.t} delay={i * 90} className="bg-card p-6">
+              <Reveal
+                key={p.t}
+                delay={i * 90}
+                className={`bg-card p-6 ${i === PRINCIPLES.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
+              >
                 <p.icon size={20} strokeWidth={1.4} className="text-hazel" />
                 <h2 className="mt-4 font-serif text-lg text-espresso">{p.t}</h2>
                 <p className="mt-1.5 text-xs leading-relaxed text-ink/60">{p.d}</p>
               </Reveal>
             ))}
           </div>
-
-          <Reveal delay={120}>
-            <a
-              href={whatsappUrl("Olá, Letícia. Gostaria de conversar sobre um leilão de imóvel.")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="label-caps mt-10 inline-block border border-espresso bg-espresso px-8 py-4 text-[12px] text-canvas transition-colors hover:bg-espresso-deep"
-            >
-              Conversar diretamente
-            </a>
-          </Reveal>
         </div>
 
         <Reveal delay={140} className="md:col-span-4 md:col-start-9">

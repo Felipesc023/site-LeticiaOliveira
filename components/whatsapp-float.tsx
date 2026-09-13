@@ -14,7 +14,7 @@ export function WhatsappFloat() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar no WhatsApp"
-      className="group fixed bottom-5 right-5 z-40 float-idle"
+      className="group fixed bottom-5 right-5 z-40 float-idle [body.mobile-nav-open_&]:hidden"
     >
       <span
         className="flex h-12 w-12 items-center justify-center bg-[#25D366] text-white shadow-sm transition-transform duration-300 group-hover:scale-110 group-active:scale-95"

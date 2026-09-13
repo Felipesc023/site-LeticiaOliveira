@@ -29,5 +29,4 @@ Setup completo (Google OAuth, variáveis, banco, deploy, geração de assets): *
 
 ## Pendências
 
-- Texto real da página **Sobre** (hoje é placeholder).
-- Config do Google OAuth no Supabase e `ANTHROPIC_API_KEY` (ver SETUP.md).
+- Config do Google OAuth no Supabase e `GEMINI_API_KEY` (ver SETUP.md).

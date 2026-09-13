@@ -2,8 +2,9 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAdminEmail } from "@/lib/config";
 
-/** Refreshes the Supabase session cookie on every request, and gates /admin
-    behind the email allowlist (RF-001 / RN-001). */
+/** Gates /admin behind the email allowlist (RF-001 / RN-001). The matcher
+    below already scopes this to /admin — public pages never touch auth, so
+    they skip the Supabase round-trip that was making page switches slow. */
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -32,10 +33,7 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
-  const isAdminArea = path.startsWith("/admin");
-
-  if (isAdminArea && !isAdminEmail(user?.email)) {
+  if (!isAdminEmail(user?.email)) {
     const url = request.nextUrl.clone();
     url.pathname = "/entrar";
     url.searchParams.set("denied", user ? "1" : "0");
@@ -46,5 +44,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp|gif)$).*)"],
+  matcher: ["/admin/:path*"],
 };

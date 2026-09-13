@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Monogram } from "@/components/monogram";
-import { whatsappUrl } from "@/lib/config";
 
 const NAV = [
   { href: "/", label: "Início" },
@@ -12,8 +11,6 @@ const NAV = [
   { href: "/blog", label: "Blog" },
   { href: "/contato", label: "Contato" },
 ];
-
-const WA_MSG = "Olá, Letícia. Gostaria de uma análise prévia de um edital de leilão.";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -31,6 +28,11 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => setOpen(false), [pathname]);
+
+  useEffect(() => {
+    document.body.classList.toggle("mobile-nav-open", open);
+    return () => document.body.classList.remove("mobile-nav-open");
+  }, [open]);
 
   return (
     <header
@@ -71,14 +73,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a
-            href={whatsappUrl(WA_MSG)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="label-caps border border-espresso bg-espresso px-5 py-2.5 text-[11px] text-canvas transition-all duration-300 hover:bg-espresso-deep hover:tracking-[0.28em]"
-          >
-            WhatsApp
-          </a>
         </nav>
 
         <button
@@ -108,14 +102,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a
-            href={whatsappUrl(WA_MSG)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="label-caps mt-2 block border border-espresso bg-espresso px-5 py-3 text-center text-[11px] text-canvas"
-          >
-            Falar no WhatsApp
-          </a>
         </nav>
       )}
     </header>
