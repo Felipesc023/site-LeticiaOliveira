@@ -1,17 +1,17 @@
 import { ImageResponse } from "next/og";
-import fs from "node:fs";
-import path from "node:path";
 import { getArticle } from "@/lib/articles";
 import { categoryLabel } from "@/lib/config";
+import { MONOGRAM_BASE64 } from "./monogram-base64";
 
 export const runtime = "nodejs";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "Letícia Oliveira — Leilões de Imóveis";
 
-const monogram = fs
-  .readFileSync(path.join(process.cwd(), "public/brand/monogram.png"))
-  .toString("base64");
+// Inlined at build time — reading from public/ at runtime isn't reliable in
+// Vercel's serverless functions (that dir is served by the CDN, not bundled
+// into the function's filesystem), which was crashing this whole route.
+const monogram = MONOGRAM_BASE64;
 
 /** Brand-template OG image (DESIGN.md §21): title + category tint + monogram. */
 export default async function OgImage({
