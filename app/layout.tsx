@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { WhatsappFloat } from "@/components/whatsapp-float";
 import { NavProgress } from "@/components/nav-progress";
 import { Analytics } from "@/components/analytics";
+import { OAuthCodeRedirect } from "@/components/oauth-code-redirect";
 import "./globals.css";
 
 const serif = Playfair_Display({
@@ -48,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${serif.variable} ${sans.variable}`}>
       <body>
+        <OAuthCodeRedirect />
         <NavProgress />
         <SiteHeader />
         <main>{children}</main>
