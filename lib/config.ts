@@ -1,7 +1,7 @@
 export const SITE = {
   name: "Letícia Oliveira",
   role: "Advocacia em Leilões de Imóveis",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP ?? "",
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
 } as const;
