@@ -36,7 +36,10 @@ export async function middleware(request: NextRequest) {
   if (!isAdminEmail(user?.email)) {
     const url = request.nextUrl.clone();
     url.pathname = "/entrar";
-    url.searchParams.set("denied", user ? "1" : "0");
+    // Only flag as "denied" when there's a real (non-admin) session — a
+    // plain unauthenticated visit isn't a failed login attempt and
+    // shouldn't show an error banner before the user has done anything.
+    if (user) url.searchParams.set("denied", "1");
     return NextResponse.redirect(url);
   }
 
