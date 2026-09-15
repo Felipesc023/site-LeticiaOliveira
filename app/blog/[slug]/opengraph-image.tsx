@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getArticle } from "@/lib/articles";
 import { categoryLabel } from "@/lib/config";
-import { MONOGRAM_BASE64 } from "./monogram-base64";
+import { MONOGRAM_BASE64 } from "@/lib/monogram-base64";
 
 export const runtime = "nodejs";
 export const size = { width: 1200, height: 630 };

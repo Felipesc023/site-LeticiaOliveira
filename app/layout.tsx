@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     url: SITE.url,
   },
+  twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
 };
 
