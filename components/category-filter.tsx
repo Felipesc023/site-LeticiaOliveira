@@ -16,8 +16,8 @@ export function CategoryFilter({ active }: { active?: string }) {
             title={`Filtrar artigos: ${t.label}`}
             className={`chip label-caps border px-4 py-2 text-[11px] ${
               isActive
-                ? "border-espresso bg-espresso text-canvas"
-                : "border-espresso/30 text-hazel hover:border-espresso"
+                ? "border-transparent bg-hazel shadow-[0_6px_16px_-8px_rgba(140,98,73,0.55)]"
+                : "border-espresso/15 text-hazel hover:border-hazel hover:bg-hazel/10"
             }`}
           >
             {t.label}

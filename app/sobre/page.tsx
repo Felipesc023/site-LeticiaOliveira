@@ -57,15 +57,17 @@ export default function SobrePage() {
             </div>
           </Reveal>
 
-          <div className="mt-12 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {PRINCIPLES.map((p, i) => (
               <Reveal
                 key={p.t}
                 delay={i * 90}
                 dir={i % 2 === 0 ? "left" : "right"}
-                className={`bg-card p-6 ${i === PRINCIPLES.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
+                className={`feature-card ${i === PRINCIPLES.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
               >
-                <p.icon size={20} strokeWidth={1.4} className="text-hazel" />
+                <span className="feature-card__icon">
+                  <p.icon size={18} strokeWidth={1.6} />
+                </span>
                 <h2 className="mt-4 font-serif text-lg text-espresso">{p.t}</h2>
                 <p className="mt-1.5 text-xs leading-relaxed text-ink/60">{p.d}</p>
               </Reveal>

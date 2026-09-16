@@ -106,10 +106,12 @@ export default async function HomePage() {
             Duas frentes, uma especialidade
           </h2>
         </Reveal>
-        <div className="mt-12 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] md:grid-cols-2">
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
           {DOMAINS.map((d, i) => (
-            <Reveal key={d.title} delay={i * 90} dir={i % 2 === 0 ? "left" : "right"} className="lift border hairline bg-card p-8 hover:border-espresso md:p-10">
-              <d.icon size={22} strokeWidth={1.4} className="text-hazel" />
+            <Reveal key={d.title} delay={i * 90} dir={i % 2 === 0 ? "left" : "right"} className="feature-card md:p-10">
+              <span className="feature-card__icon">
+                <d.icon size={20} strokeWidth={1.6} />
+              </span>
               <span className="label-caps mt-5 block text-hazel">{d.tag}</span>
               <h3 className="mt-2 font-serif text-2xl text-espresso">{d.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink/65">{d.text}</p>

@@ -47,29 +47,35 @@ export default function ContatoPage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="mt-8 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-2">
-              <div className="bg-card p-6">
-                <Phone size={20} strokeWidth={1.4} className="text-hazel" />
+            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+              <div className="feature-card">
+                <span className="feature-card__icon">
+                  <Phone size={18} strokeWidth={1.6} />
+                </span>
                 <p className="label-caps mt-4 text-[10px] text-hazel">Telefone</p>
                 <p className="mt-1 font-serif text-lg text-espresso">{formatPhone(SITE.whatsapp)}</p>
               </div>
-              <div className="bg-card p-6">
-                <Mail size={20} strokeWidth={1.4} className="text-hazel" />
+              <div className="feature-card">
+                <span className="feature-card__icon">
+                  <Mail size={18} strokeWidth={1.6} />
+                </span>
                 <p className="label-caps mt-4 text-[10px] text-hazel">E-mail</p>
                 <p className="mt-1 break-all font-serif text-lg text-espresso">{ADMIN_EMAIL}</p>
               </div>
             </div>
           </Reveal>
 
-          <div className="mt-14 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {STEPS.map((s, i) => (
               <Reveal
                 key={s.t}
                 delay={i * 90}
                 dir={i % 2 === 0 ? "left" : "right"}
-                className={`bg-card p-6 ${i === STEPS.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
+                className={`feature-card ${i === STEPS.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
               >
-                <s.icon size={20} strokeWidth={1.4} className="text-hazel" />
+                <span className="feature-card__icon">
+                  <s.icon size={18} strokeWidth={1.6} />
+                </span>
                 <h2 className="mt-4 font-serif text-lg text-espresso">{s.t}</h2>
                 <p className="mt-1.5 text-xs leading-relaxed text-ink/60">{s.d}</p>
               </Reveal>
