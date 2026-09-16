@@ -291,7 +291,7 @@ export function ArticleEditor({ article }: Props) {
         </div>
       </form>
 
-      <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
+      <aside className="space-y-4 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto">
         <div className="border hairline bg-card p-4">
           <p className="label-caps text-hazel">Assistente editorial</p>
           <p className="mt-2 text-xs leading-relaxed text-ink/60">
