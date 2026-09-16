@@ -24,7 +24,6 @@ export async function generateMetadata({
   return {
     title: article.title,
     description: article.meta_description ?? undefined,
-    keywords: article.keywords ?? undefined,
     alternates: { canonical: url },
     openGraph: {
       type: "article",

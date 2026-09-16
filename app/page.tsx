@@ -4,6 +4,7 @@ import { listArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/article-card";
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
+import { Parallax } from "@/components/parallax";
 import { whatsappUrl } from "@/lib/config";
 
 export const revalidate = 600;
@@ -71,12 +72,14 @@ export default async function HomePage() {
             </Reveal>
           </div>
           <Reveal delay={120} className="md:col-span-4 md:col-start-9">
-            <Portrait
-              name="home.jpg"
-              alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
-              className="aspect-[4/5]"
-              priority
-            />
+            <Parallax speed={0.08}>
+              <Portrait
+                name="home.jpg"
+                alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
+                className="aspect-[4/5]"
+                priority
+              />
+            </Parallax>
           </Reveal>
         </div>
       </section>
@@ -105,7 +108,7 @@ export default async function HomePage() {
         </Reveal>
         <div className="mt-12 grid gap-px border hairline bg-[rgba(61,43,31,0.12)] md:grid-cols-2">
           {DOMAINS.map((d, i) => (
-            <Reveal key={d.title} delay={i * 90} className="lift border hairline bg-card p-8 hover:border-espresso md:p-10">
+            <Reveal key={d.title} delay={i * 90} dir={i % 2 === 0 ? "left" : "right"} className="lift border hairline bg-card p-8 hover:border-espresso md:p-10">
               <d.icon size={22} strokeWidth={1.4} className="text-hazel" />
               <span className="label-caps mt-5 block text-hazel">{d.tag}</span>
               <h3 className="mt-2 font-serif text-2xl text-espresso">{d.title}</h3>

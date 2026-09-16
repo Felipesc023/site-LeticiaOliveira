@@ -31,10 +31,6 @@ export async function saveArticle(
   let status = formData.get("status") as ArticleStatus;
   const slugRaw = (formData.get("slug") as string)?.trim();
   const metaDescription = (formData.get("meta_description") as string)?.trim() || null;
-  const keywords = (formData.get("keywords") as string)
-    ?.split(",")
-    .map((k) => k.trim())
-    .filter(Boolean);
   const coverUrl = (formData.get("cover_url") as string)?.trim() || null;
   const coverCredit = (formData.get("cover_credit") as string)?.trim() || null;
   const scheduledAt = (formData.get("published_at") as string) || null;
@@ -59,7 +55,6 @@ export async function saveArticle(
     status: pub.status,
     published_at: pub.published_at,
     meta_description: metaDescription,
-    keywords: keywords && keywords.length ? keywords : null,
     cover_url: coverUrl,
     cover_credit: coverCredit,
   };

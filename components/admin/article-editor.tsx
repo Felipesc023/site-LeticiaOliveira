@@ -26,7 +26,6 @@ export function ArticleEditor({ article }: Props) {
   const [slugTouched, setSlugTouched] = useState(!!article);
   const [content, setContent] = useState(article?.content ?? "");
   const [metaDescription, setMetaDescription] = useState(article?.meta_description ?? "");
-  const [keywords, setKeywords] = useState((article?.keywords ?? []).join(", "));
   const [coverUrl, setCoverUrl] = useState(article?.cover_url ?? "");
   const [coverCredit, setCoverCredit] = useState(article?.cover_credit ?? "");
   const [status, setStatus] = useState(article?.status ?? "draft");
@@ -89,7 +88,6 @@ export function ArticleEditor({ article }: Props) {
       }
       setContent(data.html);
       if (data.meta_description) setMetaDescription(data.meta_description);
-      if (Array.isArray(data.keywords)) setKeywords(data.keywords.join(", "));
       if (!slugTouched && data.slug) setSlug(slugify(data.slug));
       setAiMsg("Artigo revisado e formatado. Revise antes de publicar.");
     } catch {
@@ -114,7 +112,6 @@ export function ArticleEditor({ article }: Props) {
         return;
       }
       setMetaDescription(data.meta_description ?? metaDescription);
-      setKeywords((data.keywords ?? []).join(", "));
       if (!slugTouched && data.slug) setSlug(slugify(data.slug));
       setAiMsg("Metadados sugeridos.");
     } catch {
@@ -174,8 +171,8 @@ export function ArticleEditor({ article }: Props) {
         </Field>
 
         <Field label="Imagem de capa">
-          <div className="flex items-start gap-4">
-            <div className="relative aspect-[16/9] w-48 shrink-0 overflow-hidden border hairline bg-subtle">
+          <div className="flex flex-col items-start gap-4 sm:flex-row">
+            <div className="relative aspect-[16/9] w-full max-w-[240px] shrink-0 overflow-hidden border hairline bg-subtle sm:w-48">
               {coverUrl ? (
                 <Image src={coverUrl} alt="" fill sizes="192px" className="object-cover" />
               ) : (
@@ -224,15 +221,6 @@ export function ArticleEditor({ article }: Props) {
           <span className="mt-1 block text-xs text-ink/40">
             {metaDescription.length} caracteres
           </span>
-        </Field>
-
-        <Field label="Palavras-chave (separadas por vírgula)">
-          <input
-            name="keywords"
-            value={keywords}
-            onChange={(e) => setKeywords(e.target.value)}
-            className="w-full border hairline bg-card px-3 py-2 text-sm outline-none focus:border-espresso"
-          />
         </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">

@@ -25,5 +25,4 @@ export type ArticleInput = Omit<
 export interface AiSeo {
   meta_description: string;
   slug: string;
-  keywords: string[];
 }

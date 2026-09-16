@@ -18,10 +18,10 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-canvas">
       <header className="border-b hairline bg-card">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-5">
-          <div className="flex items-center gap-6">
+        <div className="mx-auto flex h-auto max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 py-3 sm:h-14 sm:flex-nowrap sm:py-0">
+          <div className="flex items-center gap-4 sm:gap-6">
             <Link href="/admin" className="label-caps text-espresso">
-              Painel editorial
+              Painel
             </Link>
             <Link
               href="/admin/articles/new"
@@ -42,7 +42,7 @@ export default async function AdminLayout({
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden text-xs text-ink/50 sm:block">{admin.email}</span>
+            <span className="hidden text-xs text-ink/50 md:block">{admin.email}</span>
             <form action={signOut}>
               <button
                 title="Encerrar a sessão"
@@ -55,7 +55,7 @@ export default async function AdminLayout({
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-5 py-10">{children}</main>
+      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-5 sm:py-10">{children}</main>
     </div>
   );
 }

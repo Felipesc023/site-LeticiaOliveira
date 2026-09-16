@@ -77,10 +77,9 @@ Regras dos destaques:
 METADADOS:
 - meta_description: 1 frase, 120-158 caracteres, sem clickbait.
 - slug: minúsculas, sem acentos, palavras com hífen, curto.
-- keywords: 3 a 6 termos de busca realistas.
 ${HUMAN_VOICE_RULES}`;
 
-const OPTIMIZE_SHAPE = `{"html":"<h2>...</h2><p>...</p>","meta_description":"...","slug":"...","keywords":["...","...","..."]}`;
+const OPTIMIZE_SHAPE = `{"html":"<h2>...</h2><p>...</p>","meta_description":"...","slug":"..."}`;
 
 export async function optimizeArticle(
   title: string,
@@ -96,7 +95,6 @@ export async function optimizeArticle(
     html: sanitizeArticleHtml(String(out.html ?? "")) || "<p></p>",
     meta_description: String(out.meta_description ?? ""),
     slug: String(out.slug ?? ""),
-    keywords: Array.isArray(out.keywords) ? out.keywords.map(String).slice(0, 6) : [],
   };
 }
 
@@ -105,10 +103,9 @@ export async function optimizeArticle(
 const SEO_SYSTEM = `Você gera metadados de SEO em português para um artigo de blog jurídico sobre leilões de imóveis.
 - meta_description: 1 frase, 120-158 caracteres, sem clickbait.
 - slug: curto, em minúsculas, palavras separadas por hífen, sem acentos.
-- keywords: 3 a 6 termos de busca realistas.
 ${HUMAN_VOICE_RULES}`;
 
-const SEO_SHAPE = `{"meta_description":"...","slug":"...","keywords":["...","...","..."]}`;
+const SEO_SHAPE = `{"meta_description":"...","slug":"..."}`;
 
 export async function suggestSeo(title: string, content: string): Promise<AiSeo> {
   const seo = await askJson<AiSeo>(
@@ -119,7 +116,6 @@ export async function suggestSeo(title: string, content: string): Promise<AiSeo>
   return {
     meta_description: String(seo.meta_description ?? ""),
     slug: String(seo.slug ?? ""),
-    keywords: Array.isArray(seo.keywords) ? seo.keywords.map(String).slice(0, 6) : [],
   };
 }
 

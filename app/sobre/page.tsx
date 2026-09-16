@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ShieldCheck, Handshake, Scale, MapPin, BadgeCheck, Building2 } from "lucide-react";
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
+import { Parallax } from "@/components/parallax";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -61,6 +62,7 @@ export default function SobrePage() {
               <Reveal
                 key={p.t}
                 delay={i * 90}
+                dir={i % 2 === 0 ? "left" : "right"}
                 className={`bg-card p-6 ${i === PRINCIPLES.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
               >
                 <p.icon size={20} strokeWidth={1.4} className="text-hazel" />
@@ -72,7 +74,9 @@ export default function SobrePage() {
         </div>
 
         <Reveal delay={140} className="md:col-span-4 md:col-start-9">
-          <Portrait name="sobre.jpg" alt="Retrato de Letícia Oliveira" className="aspect-[4/5]" priority />
+          <Parallax speed={0.08}>
+            <Portrait name="sobre.jpg" alt="Retrato de Letícia Oliveira" className="aspect-[4/5]" priority />
+          </Parallax>
           <dl className="mt-6 divide-y hairline border-y hairline">
             {FACTS.map((f) => (
               <div key={f.label} className="flex gap-3 py-3.5">

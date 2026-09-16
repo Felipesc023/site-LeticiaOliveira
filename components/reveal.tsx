@@ -33,11 +33,13 @@ export function Reveal({
   className,
   delay = 0,
   as,
+  dir,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
   as?: ElementType;
+  dir?: "up" | "left" | "right";
 }) {
   const Tag = as ?? "div";
   const ref = useRef<HTMLElement>(null);
@@ -66,6 +68,7 @@ export function Reveal({
     <Tag
       ref={ref}
       data-reveal={shown ? "in" : "out"}
+      data-dir={dir}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
       className={className}
     >
