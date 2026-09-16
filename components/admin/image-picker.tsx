@@ -86,6 +86,9 @@ export function ImagePicker({
             <button
               type="button"
               onClick={() => setTab("stock")}
+              title="Buscar no banco de imagens do Unsplash"
+              aria-label="Aba: banco de imagens"
+              aria-pressed={tab === "stock"}
               className={`label-caps text-[11px] ${tab === "stock" ? "text-espresso" : "text-hazel"}`}
             >
               Banco de imagens
@@ -93,12 +96,15 @@ export function ImagePicker({
             <button
               type="button"
               onClick={() => setTab("upload")}
+              title="Enviar uma imagem do computador"
+              aria-label="Aba: enviar arquivo"
+              aria-pressed={tab === "upload"}
               className={`label-caps text-[11px] ${tab === "upload" ? "text-espresso" : "text-hazel"}`}
             >
               Enviar arquivo
             </button>
           </div>
-          <button type="button" onClick={onClose} aria-label="Fechar">
+          <button type="button" onClick={onClose} title="Fechar" aria-label="Fechar seletor de imagem">
             <X size={18} className="text-hazel" />
           </button>
         </div>
@@ -117,9 +123,11 @@ export function ImagePicker({
                 <button
                   type="submit"
                   disabled={busy}
-                  className="label-caps flex items-center gap-2 border border-espresso bg-espresso px-4 py-2 text-[11px] text-canvas disabled:opacity-50"
+                  title="Buscar imagens"
+                  aria-label="Buscar imagens"
+                  className="btn btn-primary btn-sm"
                 >
-                  <Search size={13} /> Buscar
+                  <Search size={13} aria-hidden /> Buscar
                 </button>
               </form>
               {err && <p className="mt-3 text-xs text-error">{err}</p>}
@@ -129,6 +137,8 @@ export function ImagePicker({
                     key={img.id}
                     type="button"
                     onClick={() => pickStock(img)}
+                    title={`Usar esta imagem (${img.credit})`}
+                    aria-label={`Escolher imagem de ${img.credit}`}
                     className="group relative aspect-[4/3] overflow-hidden border hairline"
                   >
                     <Image

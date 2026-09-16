@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { listArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/article-card";
 import { CategoryFilter } from "@/components/category-filter";
+import { Pagination } from "@/components/pagination";
 import { Reveal } from "@/components/reveal";
 import { CATEGORIES, type CategorySlug } from "@/lib/config";
 
@@ -20,11 +21,12 @@ function asCategory(v: string | undefined): CategorySlug | undefined {
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cat?: string }>;
+  searchParams: Promise<{ cat?: string; page?: string }>;
 }) {
-  const { cat } = await searchParams;
+  const { cat, page: pageParam } = await searchParams;
   const category = asCategory(cat);
-  const articles = await listArticles(category);
+  const page = Math.max(1, Number(pageParam) || 1);
+  const { items: articles, total, pageSize } = await listArticles(category, page);
 
   return (
     <div className="mx-auto max-w-[var(--container-max)] px-5 py-16 md:px-20 md:py-24">
@@ -41,13 +43,22 @@ export default async function BlogPage({
       {articles.length === 0 ? (
         <p className="mt-16 text-ink/70">Nenhum artigo publicado nesta categoria ainda.</p>
       ) : (
-        <div className="mt-12 grid gap-8 md:grid-cols-3">
-          {articles.map((a, i) => (
-            <Reveal key={a.id} delay={(i % 3) * 80}>
-              <ArticleCard article={a} priority={i < 3} />
-            </Reveal>
-          ))}
-        </div>
+        <>
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            {articles.map((a, i) => (
+              <Reveal key={a.id} delay={(i % 3) * 80}>
+                <ArticleCard article={a} priority={i < 3} />
+              </Reveal>
+            ))}
+          </div>
+          <Pagination
+            basePath="/blog"
+            params={{ cat: category }}
+            page={page}
+            pageSize={pageSize}
+            total={total}
+          />
+        </>
       )}
     </div>
   );

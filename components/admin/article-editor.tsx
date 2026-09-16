@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Sparkles, ImageIcon, Trash2 } from "lucide-react";
+import { Sparkles, ImageIcon, Trash2, SpellCheck2 } from "lucide-react";
 import { saveArticle, deleteArticle, type SaveResult } from "@/app/admin/actions";
 import { CATEGORIES } from "@/lib/config";
 import { slugify } from "@/lib/slug";
@@ -35,8 +35,9 @@ export function ArticleEditor({ article }: Props) {
   );
 
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [aiBusy, setAiBusy] = useState<"optimize" | "seo" | null>(null);
+  const [aiBusy, setAiBusy] = useState<"optimize" | "seo" | "review" | null>(null);
   const [aiMsg, setAiMsg] = useState<string | null>(null);
+  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
     if (!slugTouched && title) setSlug(slugify(title));
@@ -46,9 +47,35 @@ export function ArticleEditor({ article }: Props) {
     if (state?.ok) router.push("/admin");
   }, [state, router]);
 
+  async function runReview() {
+    setAiBusy("review");
+    setAiMsg(null);
+    setAiSuggestions([]);
+    try {
+      const res = await fetch("/api/ai/review", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ title, draft: content }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAiMsg(data.error ?? "Falha ao revisar");
+        return;
+      }
+      setContent(data.html);
+      setAiSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
+      setAiMsg("Correções pontuais aplicadas. O texto e as ideias continuam suas.");
+    } catch {
+      setAiMsg("Falha ao revisar");
+    } finally {
+      setAiBusy(null);
+    }
+  }
+
   async function runOptimize() {
     setAiBusy("optimize");
     setAiMsg(null);
+    setAiSuggestions([]);
     try {
       const res = await fetch("/api/ai/optimize", {
         method: "POST",
@@ -161,9 +188,11 @@ export function ArticleEditor({ article }: Props) {
               <button
                 type="button"
                 onClick={() => setPickerOpen(true)}
-                className="label-caps flex items-center gap-2 border border-espresso px-4 py-2 text-[11px] text-espresso hover:bg-subtle"
+                title={coverUrl ? "Trocar a imagem de capa" : "Escolher uma imagem de capa"}
+                aria-label={coverUrl ? "Trocar imagem de capa" : "Escolher imagem de capa"}
+                className="btn btn-secondary btn-sm"
               >
-                <ImageIcon size={13} /> {coverUrl ? "Trocar imagem" : "Escolher imagem"}
+                <ImageIcon size={13} aria-hidden /> {coverUrl ? "Trocar imagem" : "Escolher imagem"}
               </button>
               {coverUrl && (
                 <button
@@ -172,9 +201,11 @@ export function ArticleEditor({ article }: Props) {
                     setCoverUrl("");
                     setCoverCredit("");
                   }}
-                  className="label-caps flex items-center gap-2 px-1 text-[11px] text-error"
+                  title="Remover a imagem de capa"
+                  aria-label="Remover imagem de capa"
+                  className="btn btn-ghost btn-sm px-1 text-error"
                 >
-                  <Trash2 size={13} /> Remover
+                  <Trash2 size={13} aria-hidden /> Remover
                 </button>
               )}
               {coverCredit && <p className="text-xs text-ink/50">{coverCredit}</p>}
@@ -238,7 +269,9 @@ export function ArticleEditor({ article }: Props) {
           <button
             type="submit"
             disabled={pending}
-            className="label-caps border border-espresso bg-espresso px-8 py-3 text-[12px] text-canvas disabled:opacity-50"
+            title="Salvar as alterações deste artigo"
+            aria-label="Salvar artigo"
+            className="btn btn-primary disabled:opacity-50"
           >
             {pending ? "Salvando…" : "Salvar"}
           </button>
@@ -248,7 +281,9 @@ export function ArticleEditor({ article }: Props) {
               onClick={() => {
                 if (confirm("Excluir este artigo?")) deleteArticle(article.id);
               }}
-              className="label-caps px-4 py-3 text-[11px] text-error"
+              title="Excluir este artigo definitivamente"
+              aria-label="Excluir artigo"
+              className="btn btn-ghost btn-sm text-error"
             >
               Excluir
             </button>
@@ -260,29 +295,55 @@ export function ArticleEditor({ article }: Props) {
         <div className="border hairline bg-card p-4">
           <p className="label-caps text-hazel">Assistente editorial</p>
           <p className="mt-2 text-xs leading-relaxed text-ink/60">
-            Cole o rascunho no editor e deixe a IA revisar o texto, aplicar a
-            formatação, inserir destaques (avisos, dicas e termos) e preencher o
-            SEO. Você revisa antes de publicar.
+            Cole o rascunho no editor. "Revisar sem reescrever" só corrige
+            gramática e ortografia, mantendo suas palavras, e sugere ideias de
+            organização à parte. "Otimizar e formatar" reescreve e formata o
+            artigo inteiro, com destaques e SEO.
           </p>
+          <button
+            type="button"
+            onClick={runReview}
+            disabled={aiBusy !== null}
+            title="Corrige só gramática e ortografia, sem trocar seu texto"
+            aria-label="Revisar o texto sem reescrever, só corrigindo erros"
+            className="btn btn-secondary btn-sm mt-4 w-full"
+          >
+            <SpellCheck2 size={14} className={aiBusy === "review" ? "animate-pulse" : ""} aria-hidden />
+            {aiBusy === "review" ? "Revisando…" : "Revisar sem reescrever"}
+          </button>
           <button
             type="button"
             onClick={runOptimize}
             disabled={aiBusy !== null}
-            className="label-caps mt-4 flex w-full items-center justify-center gap-2 border border-espresso bg-espresso px-4 py-3 text-[11px] text-canvas transition-opacity disabled:opacity-40"
+            title="Reescreve, formata e sugere SEO automaticamente"
+            aria-label="Otimizar e formatar o artigo inteiro com IA"
+            className="btn btn-primary btn-sm mt-2 w-full"
           >
-            <Sparkles size={14} className={aiBusy === "optimize" ? "animate-pulse" : ""} />
+            <Sparkles size={14} className={aiBusy === "optimize" ? "animate-pulse" : ""} aria-hidden />
             {aiBusy === "optimize" ? "Otimizando…" : "Otimizar e formatar"}
           </button>
           <button
             type="button"
             onClick={runSeo}
             disabled={aiBusy !== null}
-            className="label-caps mt-2 w-full border border-espresso px-4 py-2 text-[11px] text-espresso transition-colors hover:bg-subtle disabled:opacity-40"
+            title="Sugere só meta description, slug e palavras-chave"
+            aria-label="Sugerir apenas os metadados de SEO"
+            className="btn btn-ghost btn-sm mt-2 w-full"
           >
             {aiBusy === "seo" ? "Gerando…" : "Só sugerir SEO"}
           </button>
           {aiBusy && <AiProgress kind={aiBusy} />}
           {!aiBusy && aiMsg && <p className="mt-3 text-xs text-hazel">{aiMsg}</p>}
+          {!aiBusy && aiSuggestions.length > 0 && (
+            <div className="mt-3 border-l-2 border-hazel/40 pl-3">
+              <p className="label-caps text-[10px] text-hazel">Ideias de organização</p>
+              <ul className="mt-1.5 space-y-1.5 text-xs leading-relaxed text-ink/65">
+                {aiSuggestions.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className="border hairline bg-card p-4 text-xs leading-relaxed text-ink/55">

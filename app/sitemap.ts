@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { listArticles } from "@/lib/articles";
+import { listArticleSlugs } from "@/lib/articles";
 import { SITE } from "@/lib/config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let articleRoutes: MetadataRoute.Sitemap = [];
   try {
-    const articles = await listArticles();
+    const articles = await listArticleSlugs();
     articleRoutes = articles.map((a) => ({
       url: `${SITE.url}/blog/${a.slug}`,
       lastModified: a.published_at ? new Date(a.published_at) : new Date(),

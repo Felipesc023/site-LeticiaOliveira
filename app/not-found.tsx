@@ -17,16 +17,10 @@ export default function NotFound() {
         O endereço pode ter mudado ou o conteúdo foi removido.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link
-          href="/"
-          className="label-caps inline-block w-fit border border-espresso bg-espresso px-6 py-3 text-[11px] text-canvas transition-colors hover:bg-espresso-deep"
-        >
+        <Link href="/" title="Voltar à página inicial" aria-label="Voltar à página inicial" className="btn btn-primary btn-sm">
           Voltar ao início
         </Link>
-        <Link
-          href="/blog"
-          className="label-caps inline-block w-fit border border-espresso px-6 py-3 text-[11px] text-espresso transition-colors hover:bg-espresso hover:text-canvas"
-        >
+        <Link href="/blog" title="Ver os artigos do blog" aria-label="Ver o blog" className="btn btn-secondary btn-sm">
           Ver o blog
         </Link>
       </div>

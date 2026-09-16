@@ -13,7 +13,8 @@ export function CategoryFilter({ active }: { active?: string }) {
             key={t.slug || "all"}
             href={t.slug ? `/blog?cat=${t.slug}` : "/blog"}
             aria-current={isActive ? "page" : undefined}
-            className={`label-caps border px-4 py-2 text-[11px] transition-colors ${
+            title={`Filtrar artigos: ${t.label}`}
+            className={`chip label-caps border px-4 py-2 text-[11px] ${
               isActive
                 ? "border-espresso bg-espresso text-canvas"
                 : "border-espresso/30 text-hazel hover:border-espresso"

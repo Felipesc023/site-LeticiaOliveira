@@ -18,17 +18,45 @@ export type ArticleListItem = Pick<
   | "published_at"
 >;
 
-/** Published articles, newest first. RLS already hides drafts/future posts. */
+export const ARTICLES_PAGE_SIZE = 9;
+
+export interface ArticlePage {
+  items: ArticleListItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/** Published articles, newest first, paginated. RLS already hides
+    drafts/future posts. */
 export async function listArticles(
   category?: CategorySlug,
-): Promise<ArticleListItem[]> {
+  page = 1,
+): Promise<ArticlePage> {
   const supabase = await createClient();
+  const from = (page - 1) * ARTICLES_PAGE_SIZE;
+  const to = from + ARTICLES_PAGE_SIZE - 1;
   let q = supabase
     .from("articles")
-    .select(LIST_FIELDS)
-    .order("published_at", { ascending: false });
+    .select(LIST_FIELDS, { count: "exact" })
+    .order("published_at", { ascending: false })
+    .range(from, to);
   if (category) q = q.eq("category", category);
-  const { data, error } = await q;
+  const { data, error, count } = await q;
+  if (error) throw error;
+  return { items: data ?? [], total: count ?? 0, page, pageSize: ARTICLES_PAGE_SIZE };
+}
+
+/** All published slugs for the sitemap — unpaginated by design, this is a
+    build/revalidate-time read, not a user-facing list. */
+export async function listArticleSlugs(): Promise<
+  Pick<ArticleListItem, "slug" | "published_at">[]
+> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("articles")
+    .select("slug,published_at")
+    .order("published_at", { ascending: false });
   if (error) throw error;
   return data ?? [];
 }

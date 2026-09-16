@@ -24,7 +24,7 @@ const DOMAINS = [
 ];
 
 export default async function HomePage() {
-  const articles = (await listArticles()).slice(0, 3);
+  const articles = (await listArticles()).items.slice(0, 3);
 
   return (
     <>
@@ -42,7 +42,7 @@ export default async function HomePage() {
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-6 max-w-md text-lg text-ink/70">
-                Auditoria prévia de leilões judiciais e extrajudiciais — antes de
+                Auditoria prévia de leilões judiciais e extrajudiciais, antes de
                 qualquer lance.
               </p>
             </Reveal>
@@ -50,14 +50,16 @@ export default async function HomePage() {
               <div className="mt-10 flex flex-wrap items-center gap-5">
                 <a
                   href={whatsappUrl(
-                    "Olá, Letícia. Gostaria de submeter um edital de leilão para análise prévia.",
+                    "Olá, Dra. Letícia. Gostaria de tirar uma dúvida sobre um leilão de imóvel.",
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group label-caps flex items-center gap-2 border border-espresso bg-espresso px-8 py-4 text-[12px] text-canvas transition-all duration-300 hover:bg-espresso-deep hover:gap-3"
+                  className="btn btn-primary"
+                  aria-label="Falar com a Dra. Letícia Oliveira pelo WhatsApp"
+                  title="Falar com a advogada pelo WhatsApp"
                 >
-                  Submeter edital
-                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                  Fale com a advogada
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden />
                 </a>
                 <Link
                   href="/sobre"

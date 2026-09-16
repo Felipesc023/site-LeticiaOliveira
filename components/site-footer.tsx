@@ -50,10 +50,12 @@ export function SiteFooter() {
           <div className="text-sm">
             <p className="label-caps mb-4 text-canvas/60">Atendimento</p>
             <a
-              href={whatsappUrl("Olá, Letícia. Gostaria de falar sobre um leilão de imóvel.")}
+              href={whatsappUrl("Olá, Dra. Letícia. Gostaria de tirar uma dúvida.")}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-canvas"
+              aria-label="Falar com a Dra. Letícia Oliveira pelo WhatsApp"
+              title="Falar pelo WhatsApp"
             >
               WhatsApp oficial
             </a>

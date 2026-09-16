@@ -11,13 +11,14 @@ const STEPS = {
     "Quase lá…",
   ],
   seo: ["Lendo o conteúdo…", "Escolhendo palavras-chave…", "Redigindo a meta description…"],
+  review: ["Lendo o texto…", "Corrigindo gramática e ortografia…", "Anotando sugestões de organização…"],
 } as const;
 
 // ponytail: a single LLM call gives no real progress signal — this bar eases
 // toward 92% on a fixed time estimate and the caller snaps it to done.
-const ESTIMATE_MS = { optimize: 26000, seo: 12000 };
+const ESTIMATE_MS = { optimize: 26000, seo: 12000, review: 20000 };
 
-export function AiProgress({ kind }: { kind: "optimize" | "seo" }) {
+export function AiProgress({ kind }: { kind: "optimize" | "seo" | "review" }) {
   const steps = STEPS[kind];
   const estimate = ESTIMATE_MS[kind];
   const [pct, setPct] = useState(5);

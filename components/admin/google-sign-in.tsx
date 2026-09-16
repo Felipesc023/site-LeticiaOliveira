@@ -21,7 +21,9 @@ export function GoogleSignIn() {
       type="button"
       onClick={signIn}
       disabled={loading}
-      className="label-caps border border-espresso bg-espresso px-8 py-4 text-[12px] text-canvas transition-colors hover:bg-espresso-deep disabled:opacity-50"
+      title="Entrar no painel com uma conta Google autorizada"
+      aria-label="Entrar com Google"
+      className="btn btn-primary disabled:opacity-50"
     >
       {loading ? "Redirecionando…" : "Entrar com Google"}
     </button>

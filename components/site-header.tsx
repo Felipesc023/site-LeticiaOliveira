@@ -80,6 +80,8 @@ export function SiteHeader() {
           className="label-caps text-[11px] text-espresso md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
+          aria-label={open ? "Fechar menu de navegação" : "Abrir menu de navegação"}
+          title={open ? "Fechar menu" : "Abrir menu"}
           onClick={() => setOpen((v) => !v)}
         >
           {open ? "Fechar" : "Menu"}

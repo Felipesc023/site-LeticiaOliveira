@@ -18,9 +18,9 @@ export const metadata: Metadata = {
 };
 
 const STEPS = [
-  { icon: Send, t: "Envie os dados", d: "Link do leilão, edital, matrícula ou nº do processo." },
-  { icon: SearchCheck, t: "Exame preliminar", d: "Viabilidade, riscos processuais e prazos fatais." },
-  { icon: FileCheck2, t: "Plano e atuação", d: "Parecer e acompanhamento até a posse." },
+  { icon: Send, t: "Você compartilha o caso", d: "Link do leilão, edital, matrícula ou número do processo." },
+  { icon: SearchCheck, t: "Análise preliminar", d: "Viabilidade, riscos processuais e prazos que correm." },
+  { icon: FileCheck2, t: "Acompanhamento", d: "Parecer e atuação até a posse do imóvel." },
 ];
 
 const FACTS = [
@@ -68,10 +68,7 @@ export default function ContatoPage() {
                 className={`bg-card p-6 ${i === STEPS.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}
               >
                 <s.icon size={20} strokeWidth={1.4} className="text-hazel" />
-                <h2 className="mt-4 font-serif text-lg text-espresso">
-                  <span className="mr-2 text-hazel/50">0{i + 1}</span>
-                  {s.t}
-                </h2>
+                <h2 className="mt-4 font-serif text-lg text-espresso">{s.t}</h2>
                 <p className="mt-1.5 text-xs leading-relaxed text-ink/60">{s.d}</p>
               </Reveal>
             ))}

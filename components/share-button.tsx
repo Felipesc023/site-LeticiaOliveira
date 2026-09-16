@@ -27,7 +27,9 @@ export function ShareButton({ title, url }: { title: string; url: string }) {
     <button
       type="button"
       onClick={share}
-      className="label-caps border border-espresso px-5 py-3 text-[11px] text-espresso transition-colors hover:bg-espresso hover:text-canvas"
+      title="Compartilhar este artigo"
+      aria-label="Compartilhar este artigo"
+      className="btn btn-secondary btn-sm"
     >
       {copied ? "Link copiado" : "Compartilhar"}
     </button>

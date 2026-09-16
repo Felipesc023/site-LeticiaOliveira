@@ -23,7 +23,7 @@ export function Portrait({
   );
 
   return (
-    <div className={`relative overflow-hidden border hairline bg-subtle ${className}`}>
+    <div className={`group relative overflow-hidden border hairline bg-subtle ${className}`}>
       {exists ? (
         <Image
           src={`/leticia/${name}`}
@@ -31,7 +31,7 @@ export function Portrait({
           fill
           priority={priority}
           sizes="(max-width: 768px) 100vw, 520px"
-          className="object-cover"
+          className="object-cover transition-transform duration-[1200ms] ease-out motion-safe:group-hover:scale-[1.03]"
         />
       ) : (
         <div className="flex h-full min-h-[420px] w-full items-center justify-center p-8 text-center">

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const PRINCIPLES = [
   { icon: ShieldCheck, t: "Rigor técnico", d: "Cada edital lido linha por linha, com o processo de origem auditado." },
   { icon: Handshake, t: "Proximidade", d: "Interlocução direta, sem intermediários, em linguagem clara." },
-  { icon: Scale, t: "Sem promessas fáceis", d: "Análise honesta de risco — inclusive quando o caminho é não arrematar." },
+  { icon: Scale, t: "Sem promessas fáceis", d: "Análise honesta de risco, mesmo quando o caminho é não arrematar." },
 ];
 
 const FACTS = [
@@ -43,15 +43,15 @@ export default function SobrePage() {
                 Comecei a estudar leilão de imóvel ainda na faculdade, em
                 2022. Não tinha muito material bom sobre o assunto na época,
                 então boa parte eu aprendi lendo edital atrás de edital,
-                errando e corrigindo o caminho. Foi trabalhoso, mas foi
-                justamente esse estudo que me deu segurança pra arrematar meus
-                primeiros imóveis.
+                errando e corrigindo o caminho. Foi esse estudo, feito no
+                braço, que me deu segurança pra arrematar meus primeiros
+                imóveis.
               </p>
               <p>
                 Foi daí que nasceu a assessoria: juntar essa vivência prática
                 de quem já passou pelo processo com a formação jurídica, pra
                 ajudar quem quer investir em leilão a enxergar os riscos antes
-                de dar o lance — não depois.
+                de dar o lance, e não depois dele.
               </p>
             </div>
           </Reveal>

@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { categoryLabel } from "@/lib/config";
+import { Pagination } from "@/components/pagination";
 
 export const dynamic = "force-dynamic";
+
+const PAGE_SIZE = 20;
 
 const STATUS_LABEL: Record<string, string> = {
   draft: "Rascunho",
@@ -10,12 +13,21 @@ const STATUS_LABEL: Record<string, string> = {
   scheduled: "Agendado",
 };
 
-export default async function AdminDashboard() {
+export default async function AdminDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(pageParam) || 1);
+  const from = (page - 1) * PAGE_SIZE;
+
   const supabase = await createClient();
-  const { data: articles } = await supabase
+  const { data: articles, count } = await supabase
     .from("articles")
-    .select("id,title,category,status,published_at,updated_at")
-    .order("updated_at", { ascending: false });
+    .select("id,title,category,status,published_at,updated_at", { count: "exact" })
+    .order("updated_at", { ascending: false })
+    .range(from, from + PAGE_SIZE - 1);
 
   return (
     <div>
@@ -23,7 +35,9 @@ export default async function AdminDashboard() {
         <h1 className="font-serif text-2xl text-espresso">Artigos</h1>
         <Link
           href="/admin/articles/new"
-          className="label-caps border border-espresso bg-espresso px-5 py-2.5 text-[11px] text-canvas"
+          title="Criar um novo artigo"
+          aria-label="Criar novo artigo"
+          className="btn btn-primary btn-sm"
         >
           Novo artigo
         </Link>
@@ -57,6 +71,8 @@ export default async function AdminDashboard() {
           </Link>
         ))}
       </div>
+
+      <Pagination basePath="/admin" page={page} pageSize={PAGE_SIZE} total={count ?? 0} />
     </div>
   );
 }

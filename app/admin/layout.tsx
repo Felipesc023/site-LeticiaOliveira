@@ -23,17 +23,32 @@ export default async function AdminLayout({
             <Link href="/admin" className="label-caps text-espresso">
               Painel editorial
             </Link>
-            <Link href="/admin/articles/new" className="label-caps text-hazel hover:text-espresso">
+            <Link
+              href="/admin/articles/new"
+              title="Criar um novo artigo"
+              aria-label="Criar novo artigo"
+              className="label-caps text-hazel hover:text-espresso"
+            >
               Novo artigo
             </Link>
-            <Link href="/" className="label-caps text-hazel hover:text-espresso" target="_blank">
+            <Link
+              href="/"
+              target="_blank"
+              title="Abrir o site público em outra aba"
+              aria-label="Ver o site público"
+              className="label-caps text-hazel hover:text-espresso"
+            >
               Ver site
             </Link>
           </div>
           <div className="flex items-center gap-4">
             <span className="hidden text-xs text-ink/50 sm:block">{admin.email}</span>
             <form action={signOut}>
-              <button className="label-caps text-[11px] text-hazel hover:text-espresso">
+              <button
+                title="Encerrar a sessão"
+                aria-label="Sair da conta"
+                className="label-caps text-[11px] text-hazel hover:text-espresso"
+              >
                 Sair
               </button>
             </form>

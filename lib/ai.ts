@@ -18,6 +18,15 @@ function client(): GoogleGenAI {
   return new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 }
 
+/** Shared into every prompt — the giveaways that make text read as
+    AI-written instead of as something Letícia actually wrote. */
+const HUMAN_VOICE_RULES = `
+VOZ HUMANA — regras de estilo, sempre:
+- Nunca use travessão (—). Troque por vírgula, ponto, ou reformule a frase.
+- Evite estas palavras/expressões batidas de texto de IA: "justamente", "fundamental", "essencial", "sobretudo", "outrossim", "cabe destacar", "vale ressaltar", "é importante ressaltar", "não apenas... mas também", "em suma", "de forma a", "no que tange", "dessa forma", "nesse sentido".
+- Frases de tamanho variado, como alguém realmente escreveria, não uma cadência artificialmente equilibrada.
+- Tom sóbrio de advogada falando com um cliente, nunca linguagem de propaganda ou "copy" comercial (nada de "aproveite", "não perca", "garanta já").`;
+
 async function askJson<T>(
   system: string,
   user: string,
@@ -68,7 +77,8 @@ Regras dos destaques:
 METADADOS:
 - meta_description: 1 frase, 120-158 caracteres, sem clickbait.
 - slug: minúsculas, sem acentos, palavras com hífen, curto.
-- keywords: 3 a 6 termos de busca realistas.`;
+- keywords: 3 a 6 termos de busca realistas.
+${HUMAN_VOICE_RULES}`;
 
 const OPTIMIZE_SHAPE = `{"html":"<h2>...</h2><p>...</p>","meta_description":"...","slug":"...","keywords":["...","...","..."]}`;
 
@@ -95,7 +105,8 @@ export async function optimizeArticle(
 const SEO_SYSTEM = `Você gera metadados de SEO em português para um artigo de blog jurídico sobre leilões de imóveis.
 - meta_description: 1 frase, 120-158 caracteres, sem clickbait.
 - slug: curto, em minúsculas, palavras separadas por hífen, sem acentos.
-- keywords: 3 a 6 termos de busca realistas.`;
+- keywords: 3 a 6 termos de busca realistas.
+${HUMAN_VOICE_RULES}`;
 
 const SEO_SHAPE = `{"meta_description":"...","slug":"...","keywords":["...","...","..."]}`;
 
@@ -109,5 +120,40 @@ export async function suggestSeo(title: string, content: string): Promise<AiSeo>
     meta_description: String(seo.meta_description ?? ""),
     slug: String(seo.slug ?? ""),
     keywords: Array.isArray(seo.keywords) ? seo.keywords.map(String).slice(0, 6) : [],
+  };
+}
+
+// ── Revisão leve (corrige sem reescrever) ────────────────────────────────────
+
+export interface ReviewResult {
+  html: string;
+  suggestions: string[];
+}
+
+const REVIEW_SYSTEM = `Você é revisor(a) de texto para o blog de uma advogada especialista em leilões de imóveis. NÃO é seu trabalho reescrever o artigo aqui, é só revisar.
+
+O QUE CORRIGIR (aplique direto no campo "html"):
+- Erros de gramática, ortografia, concordância e pontuação.
+- Nada além disso. Não troque palavras dela por sinônimos "melhores". Não reescreva frases que já estão corretas, mesmo que você faria diferente. Não mude a ordem dos parágrafos. Preserve o vocabulário e o jeito de escrever dela ao máximo.
+- Mantenha as mesmas tags HTML que já estavam no texto (não adicione destaques novos, não reformate).
+
+O QUE SUGERIR (campo "suggestions", separado do texto, nunca aplicado sozinho):
+- 2 a 5 ideias de ORGANIZAÇÃO/leitura: onde quebrar um parágrafo longo, onde um trecho renderia melhor como lista, onde caberia um subtítulo, onde um parágrafo poderia virar um destaque (aviso/dica/dicionário).
+- Nunca sugira trocar uma palavra por outra "mais sofisticada" ou "mais persuasiva".
+- Cada sugestão em 1 frase curta e direta, como um colega de trabalho comentaria, não como um relatório.
+${HUMAN_VOICE_RULES}`;
+
+const REVIEW_SHAPE = `{"html":"<p>...</p>","suggestions":["...","..."]}`;
+
+export async function reviewArticle(title: string, draftHtml: string): Promise<ReviewResult> {
+  const out = await askJson<{ html?: string; suggestions?: string[] }>(
+    REVIEW_SYSTEM,
+    `Título: ${title}\n\nTexto:\n${draftHtml.slice(0, 20000)}`,
+    REVIEW_SHAPE,
+    8000,
+  );
+  return {
+    html: sanitizeArticleHtml(String(out.html ?? draftHtml)) || draftHtml,
+    suggestions: Array.isArray(out.suggestions) ? out.suggestions.map(String).slice(0, 5) : [],
   };
 }
