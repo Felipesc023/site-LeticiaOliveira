@@ -1,6 +1,10 @@
 export const SITE = {
   name: "Letícia Oliveira",
   role: "Advocacia em Leilões de Imóveis",
+  // TODO: placeholder até a Dra. Letícia confirmar o número real de inscrição.
+  oab: "OAB/DF 189.432",
+  instagram: "https://www.instagram.com/leticiafeoliadv",
+  instagramHandle: "@leticiafeoliadv",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP ?? "",
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",

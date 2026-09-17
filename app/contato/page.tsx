@@ -3,6 +3,7 @@ import { Send, SearchCheck, FileCheck2, Video, Clock, Zap, Phone, Mail } from "l
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
 import { Parallax } from "@/components/parallax";
+import { InstagramIcon } from "@/components/icons/instagram";
 import { SITE } from "@/lib/config";
 
 const ADMIN_EMAIL = "leticiafeolii@gmail.com";
@@ -47,7 +48,7 @@ export default function ContatoPage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               <div className="feature-card">
                 <span className="feature-card__icon">
                   <Phone size={18} strokeWidth={1.6} />
@@ -62,6 +63,20 @@ export default function ContatoPage() {
                 <p className="label-caps mt-4 text-[10px] text-hazel">E-mail</p>
                 <p className="mt-1 break-all font-serif text-lg text-espresso">{ADMIN_EMAIL}</p>
               </div>
+              <a
+                href={SITE.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Abrir o Instagram da Dra. Letícia Oliveira"
+                aria-label="Abrir o Instagram da Dra. Letícia Oliveira"
+                className="feature-card sm:col-span-2 lg:col-span-1"
+              >
+                <span className="feature-card__icon">
+                  <InstagramIcon size={18} />
+                </span>
+                <p className="label-caps mt-4 text-[10px] text-hazel">Instagram</p>
+                <p className="mt-1 font-serif text-lg text-espresso">{SITE.instagramHandle}</p>
+              </a>
             </div>
           </Reveal>
 

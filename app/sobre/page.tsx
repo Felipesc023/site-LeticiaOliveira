@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { ShieldCheck, Handshake, Scale, MapPin, BadgeCheck, Building2 } from "lucide-react";
+import { ShieldCheck, Handshake, Scale, MapPin, BadgeCheck, Building2, ArrowUpRight } from "lucide-react";
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
 import { Parallax } from "@/components/parallax";
+import { InstagramIcon } from "@/components/icons/instagram";
+import { SITE } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -90,6 +92,27 @@ export default function SobrePage() {
               </div>
             ))}
           </dl>
+          <a
+            href={SITE.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Ver o Instagram da Dra. Letícia Oliveira"
+            aria-label="Ver o Instagram da Dra. Letícia Oliveira"
+            className="group mt-6 flex items-center justify-between gap-3 border hairline bg-card px-4 py-3.5 transition-colors hover:border-hazel"
+          >
+            <span className="flex items-center gap-3">
+              <InstagramIcon size={16} strokeWidth={1.5} className="shrink-0 text-hazel" />
+              <span>
+                <span className="label-caps block text-[10px]">Instagram</span>
+                <span className="mt-0.5 block text-sm text-ink/75">{SITE.instagramHandle}</span>
+              </span>
+            </span>
+            <ArrowUpRight
+              size={15}
+              className="shrink-0 text-hazel opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              aria-hidden
+            />
+          </a>
         </Reveal>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { ArticleCard } from "@/components/article-card";
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
 import { Parallax } from "@/components/parallax";
-import { whatsappUrl } from "@/lib/config";
+import { whatsappUrl, SITE } from "@/lib/config";
 
 export const revalidate = 600;
 
@@ -31,14 +31,24 @@ export default async function HomePage() {
     <>
       {/* Hero — asymmetric editorial grid (DESIGN.md §11) */}
       <section className="mx-auto max-w-[var(--container-max)] px-5 pb-16 pt-14 md:px-20 md:pb-24 md:pt-20">
-        <div className="grid gap-12 md:grid-cols-12 md:items-end">
-          <div className="md:col-span-7">
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
+          <div className="lg:col-span-6">
             <Reveal>
-              <span className="label-caps">Assessoria jurídica de alta precisão</span>
+              <div className="flex items-center gap-3">
+                <span className="h-9 w-px bg-hazel/40" aria-hidden />
+                <div>
+                  <p className="font-serif text-base text-espresso">Dra. Letícia Oliveira</p>
+                  <p className="label-caps text-[10px]">{SITE.oab}</p>
+                </div>
+              </div>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="mt-6 font-serif text-4xl leading-[1.08] text-espresso md:text-6xl">
-                A arrematação segura começa na leitura do que o edital não diz.
+              <h1 className="mt-7 font-serif text-4xl leading-[1.08] text-espresso sm:text-5xl lg:text-6xl">
+                A arrematação{" "}
+                <span className="italic text-hazel underline decoration-1 underline-offset-8">
+                  segura
+                </span>{" "}
+                começa na leitura do que o edital não diz.
               </h1>
             </Reveal>
             <Reveal delay={160}>
@@ -71,7 +81,7 @@ export default async function HomePage() {
               </div>
             </Reveal>
           </div>
-          <Reveal delay={120} className="md:col-span-4 md:col-start-9">
+          <Reveal delay={120} className="mx-auto w-full max-w-md lg:col-span-5 lg:col-start-8 lg:max-w-none">
             <Parallax speed={0.08}>
               <Portrait
                 name="home.jpg"
