@@ -1,8 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Gavel, ScrollText, ArrowRight, Quote } from "lucide-react";
 import { listArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/article-card";
-import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
 import { Parallax } from "@/components/parallax";
 import { whatsappUrl, SITE } from "@/lib/config";
@@ -29,68 +29,73 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero — asymmetric editorial grid (DESIGN.md §11) */}
-      <section className="mx-auto max-w-[var(--container-max)] px-5 pb-16 pt-14 md:px-20 md:pb-24 md:pt-20">
-        <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-6">
-            <Reveal>
-              <div className="flex items-center gap-3">
-                <span className="h-9 w-px bg-hazel/40" aria-hidden />
-                <div>
-                  <p className="font-serif text-base text-espresso">Dra. Letícia Oliveira</p>
-                  <p className="label-caps text-[10px]">{SITE.oab}</p>
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={80}>
-              <h1 className="mt-7 font-serif text-4xl leading-[1.08] text-espresso sm:text-5xl lg:text-6xl">
-                A arrematação{" "}
-                <span className="italic text-hazel underline decoration-1 underline-offset-8">
-                  segura
-                </span>{" "}
-                começa na leitura do que o edital não diz.
-              </h1>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-6 max-w-md text-lg text-ink/70">
-                Auditoria prévia de leilões judiciais e extrajudiciais, antes de
-                qualquer lance.
-              </p>
-            </Reveal>
-            <Reveal delay={240}>
-              <div className="mt-10 flex flex-wrap items-center gap-5">
-                <a
-                  href={whatsappUrl(
-                    "Olá, Dra. Letícia. Gostaria de tirar uma dúvida sobre um leilão de imóvel.",
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary"
-                  aria-label="Falar com a Dra. Letícia Oliveira pelo WhatsApp"
-                  title="Falar com a advogada pelo WhatsApp"
-                >
-                  Fale com a advogada
-                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden />
-                </a>
-                <Link
-                  href="/sobre"
-                  className="nav-link label-caps pb-1 text-[12px] text-espresso"
-                >
-                  Conhecer a atuação
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-          <Reveal delay={120} className="mx-auto w-full max-w-md lg:col-span-5 lg:col-start-8 lg:max-w-none">
-            <Parallax speed={0.08}>
-              <Portrait
-                name="home.jpg"
+      {/* Hero — retrato recortado integrado a um degradê, como no site de referência */}
+      <section className="relative overflow-hidden">
+        <div className="grid lg:grid-cols-2">
+          <div className="relative order-1 min-h-[380px] bg-gradient-to-b from-[#faf3ea] to-[#e3c9a1] sm:min-h-[460px] lg:order-2 lg:min-h-0 lg:bg-gradient-to-br">
+            <Parallax speed={0.05} className="absolute inset-0">
+              <Image
+                src="/leticia/home-cutout.png"
                 alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
-                className="aspect-[4/5]"
+                fill
                 priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-contain object-bottom lg:object-[center_bottom]"
               />
             </Parallax>
-          </Reveal>
+          </div>
+
+          <div className="order-2 flex items-center px-5 py-14 md:px-20 md:py-20 lg:order-1 lg:py-24">
+            <div className="max-w-xl">
+              <Reveal>
+                <div className="flex items-center gap-3">
+                  <span className="h-9 w-px bg-hazel/40" aria-hidden />
+                  <div>
+                    <p className="font-serif text-base text-espresso">Dra. Letícia Oliveira</p>
+                    <p className="label-caps text-[10px]">{SITE.oab}</p>
+                  </div>
+                </div>
+              </Reveal>
+              <Reveal delay={80}>
+                <h1 className="mt-7 font-serif text-4xl leading-[1.08] text-espresso sm:text-5xl lg:text-6xl">
+                  A arrematação{" "}
+                  <span className="italic text-hazel underline decoration-1 underline-offset-8">
+                    segura
+                  </span>{" "}
+                  começa na leitura do que o edital não diz.
+                </h1>
+              </Reveal>
+              <Reveal delay={160}>
+                <p className="mt-6 max-w-md text-lg text-ink/70">
+                  Auditoria prévia de leilões judiciais e extrajudiciais, antes de
+                  qualquer lance.
+                </p>
+              </Reveal>
+              <Reveal delay={240}>
+                <div className="mt-10 flex flex-wrap items-center gap-5">
+                  <a
+                    href={whatsappUrl(
+                      "Olá, Dra. Letícia. Gostaria de tirar uma dúvida sobre um leilão de imóvel.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary"
+                    aria-label="Falar com a Dra. Letícia Oliveira pelo WhatsApp"
+                    title="Falar com a advogada pelo WhatsApp"
+                  >
+                    Fale com a advogada
+                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden />
+                  </a>
+                  <Link
+                    href="/sobre"
+                    className="nav-link label-caps pb-1 text-[12px] text-espresso"
+                  >
+                    Conhecer a atuação
+                  </Link>
+                </div>
+              </Reveal>
+            </div>
+          </div>
         </div>
       </section>
 
