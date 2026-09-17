@@ -167,8 +167,8 @@ h1, h2, h3, h4 {
     opacity: 0;
     transform: translateY(24px);
     transition:
-      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 1.15s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1.15s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
   }
   [data-reveal="out"][data-dir="left"] { transform: translateX(-32px); }
@@ -284,6 +284,13 @@ h1, h2, h3, h4 {
 }
 @media (prefers-reduced-motion: no-preference) {
   .btn-ghost:hover { background: rgba(140, 98, 73, 0.08); }
+}
+
+/* Portrait (Sobre/Contato) — rounded layered-card frame. Written as a real rule instead of
+   an arbitrary rounded-[28px] utility: Tailwind wasn't emitting that one (never picked up by
+   the JIT scan), leaving the global sharp-corner reset as the only rule that actually existed. */
+.portrait-frame {
+  border-radius: 28px;
 }
 
 /* Filter/tab pills (category filter, etc.) — lighter than .btn, no shadow. */

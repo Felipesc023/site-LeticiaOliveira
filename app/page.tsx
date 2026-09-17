@@ -43,6 +43,13 @@ export default async function HomePage() {
             sizes="100vw"
             className="object-cover object-top"
           />
+          <div className="absolute right-2 top-4 flex items-center gap-2">
+            <span className="h-7 w-px bg-espresso/50" aria-hidden />
+            <div>
+              <p className="font-serif text-sm text-espresso">Dra. Letícia Oliveira</p>
+              <p className="label-caps text-[9px]">{SITE.oab}</p>
+            </div>
+          </div>
         </div>
 
         <div className="hidden lg:block lg:absolute lg:inset-0">
@@ -59,9 +66,9 @@ export default async function HomePage() {
           </Parallax>
         </div>
 
-        <div className="relative px-5 py-14 md:px-20 md:py-20 lg:flex lg:min-h-[900px] lg:items-center lg:py-24">
+        <div className="relative px-5 py-8 md:px-20 md:py-20 lg:flex lg:min-h-[900px] lg:items-center lg:py-24">
           <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
-            <Reveal>
+            <Reveal className="hidden lg:block">
               <div className="flex items-center justify-center gap-3 lg:justify-start">
                 <span className="h-9 w-px bg-hazel/40" aria-hidden />
                 <div>
@@ -71,7 +78,7 @@ export default async function HomePage() {
               </div>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="mt-7 font-serif text-4xl leading-[1.08] text-espresso sm:text-5xl lg:text-6xl">
+              <h1 className="mt-2 font-serif text-4xl leading-[1.08] text-espresso sm:text-5xl lg:mt-7 lg:text-6xl">
                 A arrematação{" "}
                 <span className="italic text-hazel underline decoration-1 underline-offset-8">
                   segura
