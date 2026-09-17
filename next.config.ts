@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "images.pexels.com" },
     ],
+    // Default (75) softened the hero portrait noticeably; 90 keeps it crisp.
+    qualities: [75, 90],
   },
 };
 

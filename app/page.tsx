@@ -39,6 +39,7 @@ export default async function HomePage() {
             alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
             fill
             priority
+            quality={90}
             sizes="100vw"
             className="object-cover object-top"
           />
@@ -51,6 +52,7 @@ export default async function HomePage() {
               alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
               fill
               priority
+              quality={90}
               sizes="100vw"
               className="object-cover object-[center_top]"
             />
