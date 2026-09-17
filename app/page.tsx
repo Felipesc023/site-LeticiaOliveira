@@ -29,18 +29,19 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero — retrato recortado integrado a um único degradê que cobre a seção inteira (protótipo do cliente) */}
-      <section className="relative overflow-hidden lg:bg-gradient-to-br lg:from-[#fbf9f6] lg:via-[#f8f2ea] lg:to-[#eeddc4]">
+      {/* Hero — foto já composta com o degradê (Foto Início), igual à técnica do site de referência:
+          uma imagem só, sem recorte ao vivo, então não tem borda nem "cara de anexo". */}
+      <section className="relative overflow-hidden lg:bg-gradient-to-r lg:from-[#fbf9f6] lg:to-[#cbbca9]">
         <div className="grid lg:grid-cols-2">
-          <div className="relative order-1 min-h-[380px] bg-gradient-to-b from-[#fbf9f6] to-[#f1e5d2] sm:min-h-[460px] lg:order-2 lg:min-h-0 lg:bg-none">
+          <div className="relative order-1 aspect-[1122/1402] bg-[#cbbca9] lg:order-2 lg:aspect-auto lg:min-h-0">
             <Parallax speed={0.05} className="absolute inset-0">
               <Image
-                src="/leticia/home-cutout.png"
+                src="/leticia/home-hero.jpg"
                 alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-contain object-bottom lg:object-[center_bottom]"
+                className="object-cover object-top"
               />
             </Parallax>
           </div>
