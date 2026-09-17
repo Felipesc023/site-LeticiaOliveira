@@ -58,9 +58,9 @@ export default async function HomePage() {
         </div>
 
         <div className="relative px-5 py-14 md:px-20 md:py-20 lg:flex lg:min-h-[900px] lg:items-center lg:py-24">
-          <div className="max-w-xl">
+          <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
             <Reveal>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center gap-3 lg:justify-start">
                 <span className="h-9 w-px bg-hazel/40" aria-hidden />
                 <div>
                   <p className="font-serif text-base text-espresso">Dra. Letícia Oliveira</p>
@@ -78,13 +78,13 @@ export default async function HomePage() {
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-6 max-w-md text-lg text-ink/70">
+              <p className="mx-auto mt-6 max-w-md text-lg text-ink/70 lg:mx-0">
                 Auditoria prévia de leilões judiciais e extrajudiciais, antes de
                 qualquer lance.
               </p>
             </Reveal>
             <Reveal delay={240}>
-              <div className="mt-10 flex flex-wrap items-center gap-5">
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-5 lg:justify-start">
                 <a
                   href={whatsappUrl(
                     "Olá, Dra. Letícia. Gostaria de tirar uma dúvida sobre um leilão de imóvel.",
