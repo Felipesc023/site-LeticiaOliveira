@@ -29,73 +29,83 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero — foto já composta com o degradê (Foto Início), igual à técnica do site de referência:
-          uma imagem só, sem recorte ao vivo, então não tem borda nem "cara de anexo". */}
-      <section className="relative overflow-hidden lg:bg-gradient-to-r lg:from-[#fbf9f6] lg:to-[#cbbca9]">
-        <div className="grid lg:grid-cols-2">
-          <div className="relative order-1 aspect-[1122/1402] bg-[#cbbca9] lg:order-2 lg:aspect-auto lg:min-h-0">
-            <Parallax speed={0.05} className="absolute inset-0">
-              <Image
-                src="/leticia/home-hero.jpg"
-                alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover object-top"
-              />
-            </Parallax>
-          </div>
+      {/* Hero — mesma técnica do site de referência: uma imagem de fundo já composta com o
+          degradê (larga no desktop, com ela à direita e o degradê "sob" o texto; vertical no
+          mobile, como bloco próprio no topo), sem recorte ao vivo em nenhum dos dois casos. */}
+      <section className="relative overflow-hidden">
+        <div className="relative aspect-[1122/1402] lg:hidden">
+          <Image
+            src="/leticia/home-hero.jpg"
+            alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-top"
+          />
+        </div>
 
-          <div className="order-2 flex items-center px-5 py-14 md:px-20 md:py-20 lg:order-1 lg:py-24">
-            <div className="max-w-xl">
-              <Reveal>
-                <div className="flex items-center gap-3">
-                  <span className="h-9 w-px bg-hazel/40" aria-hidden />
-                  <div>
-                    <p className="font-serif text-base text-espresso">Dra. Letícia Oliveira</p>
-                    <p className="label-caps text-[10px]">{SITE.oab}</p>
-                  </div>
+        <div className="hidden lg:block lg:absolute lg:inset-0">
+          <Parallax speed={0.04} className="absolute inset-0">
+            <Image
+              src="/leticia/home-hero-wide.jpg"
+              alt="Letícia Oliveira, advogada especialista em leilões de imóveis"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-[center_top]"
+            />
+          </Parallax>
+        </div>
+
+        <div className="relative px-5 py-14 md:px-20 md:py-20 lg:flex lg:min-h-[700px] lg:items-center lg:py-24">
+          <div className="max-w-xl">
+            <Reveal>
+              <div className="flex items-center gap-3">
+                <span className="h-9 w-px bg-hazel/40" aria-hidden />
+                <div>
+                  <p className="font-serif text-base text-espresso">Dra. Letícia Oliveira</p>
+                  <p className="label-caps text-[10px]">{SITE.oab}</p>
                 </div>
-              </Reveal>
-              <Reveal delay={80}>
-                <h1 className="mt-7 font-serif text-4xl leading-[1.08] text-espresso sm:text-5xl lg:text-6xl">
-                  A arrematação{" "}
-                  <span className="italic text-hazel underline decoration-1 underline-offset-8">
-                    segura
-                  </span>{" "}
-                  começa na leitura do que o edital não diz.
-                </h1>
-              </Reveal>
-              <Reveal delay={160}>
-                <p className="mt-6 max-w-md text-lg text-ink/70">
-                  Auditoria prévia de leilões judiciais e extrajudiciais, antes de
-                  qualquer lance.
-                </p>
-              </Reveal>
-              <Reveal delay={240}>
-                <div className="mt-10 flex flex-wrap items-center gap-5">
-                  <a
-                    href={whatsappUrl(
-                      "Olá, Dra. Letícia. Gostaria de tirar uma dúvida sobre um leilão de imóvel.",
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary"
-                    aria-label="Falar com a Dra. Letícia Oliveira pelo WhatsApp"
-                    title="Falar com a advogada pelo WhatsApp"
-                  >
-                    Fale com a advogada
-                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden />
-                  </a>
-                  <Link
-                    href="/sobre"
-                    className="nav-link label-caps pb-1 text-[12px] text-espresso"
-                  >
-                    Conhecer a atuação
-                  </Link>
-                </div>
-              </Reveal>
-            </div>
+              </div>
+            </Reveal>
+            <Reveal delay={80}>
+              <h1 className="mt-7 font-serif text-4xl leading-[1.08] text-espresso sm:text-5xl lg:text-6xl">
+                A arrematação{" "}
+                <span className="italic text-hazel underline decoration-1 underline-offset-8">
+                  segura
+                </span>{" "}
+                começa na leitura do que o edital não diz.
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-6 max-w-md text-lg text-ink/70">
+                Auditoria prévia de leilões judiciais e extrajudiciais, antes de
+                qualquer lance.
+              </p>
+            </Reveal>
+            <Reveal delay={240}>
+              <div className="mt-10 flex flex-wrap items-center gap-5">
+                <a
+                  href={whatsappUrl(
+                    "Olá, Dra. Letícia. Gostaria de tirar uma dúvida sobre um leilão de imóvel.",
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                  aria-label="Falar com a Dra. Letícia Oliveira pelo WhatsApp"
+                  title="Falar com a advogada pelo WhatsApp"
+                >
+                  Fale com a advogada
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden />
+                </a>
+                <Link
+                  href="/sobre"
+                  className="nav-link label-caps pb-1 text-[12px] text-espresso"
+                >
+                  Conhecer a atuação
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
