@@ -30,17 +30,9 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero — retrato recortado integrado a um único degradê que cobre a seção inteira (protótipo do cliente) */}
-      <section className="relative overflow-hidden lg:bg-gradient-to-br lg:from-[#faf3ea] lg:via-[#f1dfc4] lg:to-[#d9b47f]">
+      <section className="relative overflow-hidden lg:bg-gradient-to-br lg:from-[#fbf9f6] lg:via-[#f8f2ea] lg:to-[#eeddc4]">
         <div className="grid lg:grid-cols-2">
-          <div className="relative order-1 min-h-[380px] bg-gradient-to-b from-[#faf3ea] to-[#e3c9a1] sm:min-h-[460px] lg:order-2 lg:min-h-0 lg:bg-none">
-            {/* No mobile/tablet a foto vem com o crachá por cima, como um recorte no próprio degradê */}
-            <div className="absolute left-5 top-6 z-10 flex items-center gap-3 lg:hidden">
-              <span className="h-9 w-px bg-espresso/30" aria-hidden />
-              <div>
-                <p className="font-serif text-base text-espresso">Dra. Letícia Oliveira</p>
-                <p className="label-caps text-[10px]">{SITE.oab}</p>
-              </div>
-            </div>
+          <div className="relative order-1 min-h-[380px] bg-gradient-to-b from-[#fbf9f6] to-[#f1e5d2] sm:min-h-[460px] lg:order-2 lg:min-h-0 lg:bg-none">
             <Parallax speed={0.05} className="absolute inset-0">
               <Image
                 src="/leticia/home-cutout.png"
