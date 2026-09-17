@@ -57,7 +57,7 @@ export default async function HomePage() {
           </Parallax>
         </div>
 
-        <div className="relative px-5 py-14 md:px-20 md:py-20 lg:flex lg:min-h-[700px] lg:items-center lg:py-24">
+        <div className="relative px-5 py-14 md:px-20 md:py-20 lg:flex lg:min-h-[900px] lg:items-center lg:py-24">
           <div className="max-w-xl">
             <Reveal>
               <div className="flex items-center gap-3">
