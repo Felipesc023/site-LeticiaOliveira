@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ShieldCheck, Handshake, Scale, MapPin, BadgeCheck, Building2, ArrowUpRight } from "lucide-react";
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
-import { Parallax } from "@/components/parallax";
 import { InstagramIcon } from "@/components/icons/instagram";
 import { SITE } from "@/lib/config";
 
@@ -78,9 +77,7 @@ export default function SobrePage() {
         </div>
 
         <Reveal delay={140} className="md:col-span-4 md:col-start-9">
-          <Parallax speed={0.08}>
-            <Portrait name="sobre.jpg" alt="Retrato de Letícia Oliveira" className="aspect-[4/5]" priority />
-          </Parallax>
+          <Portrait name="sobre.jpg" alt="Retrato de Letícia Oliveira" className="aspect-[4/5]" priority />
           <dl className="mt-6 divide-y hairline border-y hairline">
             {FACTS.map((f) => (
               <div key={f.label} className="flex gap-3 py-3.5">
