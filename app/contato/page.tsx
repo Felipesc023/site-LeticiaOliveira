@@ -111,18 +111,26 @@ export default function ContatoPage() {
               </div>
             ))}
           </dl>
-
-          <div className="mt-8 border hairline bg-card p-5">
-            <p className="font-serif text-lg text-espresso">Prefere que a gente te retorne?</p>
-            <p className="mt-1.5 text-xs leading-relaxed text-ink/60">
-              Deixe seus dados e a Dra. Letícia Oliveira entra em contato.
-            </p>
-            <div className="mt-5">
-              <LeadForm source="contato_page" />
-            </div>
-          </div>
         </Reveal>
       </div>
+
+      <Reveal delay={160}>
+        <div className="mt-16 border hairline bg-card p-6 md:mt-20 md:p-12">
+          <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] md:gap-14">
+            <div>
+              <span className="label-caps">Prefere que a gente te retorne?</span>
+              <h2 className="mt-3 font-serif text-2xl text-espresso md:text-3xl">
+                Deixe seus dados
+              </h2>
+              <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink/65">
+                A Dra. Letícia Oliveira entra em contato assim que possível, pelo
+                telefone ou e-mail que você informar.
+              </p>
+            </div>
+            <LeadForm source="contato_page" />
+          </div>
+        </div>
+      </Reveal>
     </div>
   );
 }
