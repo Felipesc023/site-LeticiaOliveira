@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { Send } from "lucide-react";
+import { Gavel, MessageCircleQuestion, Send } from "lucide-react";
 import { submitLead, type LeadResult } from "@/app/actions/leads";
 
 const INVESTMENT_RANGES = [
@@ -20,6 +20,7 @@ export function LeadForm({ source, onSuccess }: { source: string; onSuccess?: ()
     null,
   );
   const [reason, setReason] = useState<"arrematacao" | "outro">("arrematacao");
+  const [investment, setInvestment] = useState("");
   const startedAtRef = useRef(Date.now());
 
   useEffect(() => {
@@ -83,35 +84,67 @@ export function LeadForm({ source, onSuccess }: { source: string; onSuccess?: ()
       </div>
 
       <LeadField label="Sobre o que você quer falar?">
-        <select
-          name="reason"
-          value={reason}
-          onChange={(e) => setReason(e.target.value as "arrematacao" | "outro")}
-          className="w-full border hairline bg-card px-3 py-2.5 text-sm outline-none focus:border-espresso"
-        >
-          <option value="arrematacao">Arrematação de imóvel em leilão</option>
-          <option value="outro">Outro assunto</option>
-        </select>
+        <input type="hidden" name="reason" value={reason} />
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setReason("arrematacao")}
+            aria-pressed={reason === "arrematacao"}
+            title="Arrematação de imóvel em leilão"
+            className={`border p-3 text-left transition-colors ${
+              reason === "arrematacao"
+                ? "border-espresso bg-espresso text-canvas"
+                : "hairline text-espresso hover:border-hazel"
+            }`}
+          >
+            <Gavel size={17} strokeWidth={1.6} aria-hidden />
+            <span className="mt-2 block text-xs leading-snug">Arrematação de imóvel</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setReason("outro")}
+            aria-pressed={reason === "outro"}
+            title="Outro assunto"
+            className={`border p-3 text-left transition-colors ${
+              reason === "outro"
+                ? "border-espresso bg-espresso text-canvas"
+                : "hairline text-espresso hover:border-hazel"
+            }`}
+          >
+            <MessageCircleQuestion size={17} strokeWidth={1.6} aria-hidden />
+            <span className="mt-2 block text-xs leading-snug">Outro assunto</span>
+          </button>
+        </div>
       </LeadField>
 
-      {reason === "arrematacao" && (
-        <LeadField label="Quanto pretende investir na arrematação?">
-          <select
-            name="investment_range"
-            defaultValue=""
-            className="w-full border hairline bg-card px-3 py-2.5 text-sm outline-none focus:border-espresso"
-          >
-            <option value="" disabled>
-              Selecione uma faixa
-            </option>
-            {INVESTMENT_RANGES.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-        </LeadField>
-      )}
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+          reason === "arrematacao" ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <LeadField label="Quanto pretende investir na arrematação?">
+            <input type="hidden" name="investment_range" value={investment} />
+            <div className="flex flex-wrap gap-2">
+              {INVESTMENT_RANGES.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setInvestment(r)}
+                  aria-pressed={investment === r}
+                  className={`border px-3 py-1.5 text-[11px] transition-colors ${
+                    investment === r
+                      ? "border-transparent bg-hazel text-white"
+                      : "border-espresso/20 text-hazel hover:border-hazel"
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </LeadField>
+        </div>
+      </div>
 
       {state && !state.ok && (
         <p className="border-l-2 border-error pl-3 text-sm text-error">{state.error}</p>
