@@ -16,19 +16,21 @@ export function Pagination({
   page,
   pageSize,
   total,
+  label = "Paginação de artigos",
 }: {
   basePath: string;
   params?: Record<string, string | undefined>;
   page: number;
   pageSize: number;
   total: number;
+  label?: string;
 }) {
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   if (pageCount <= 1) return null;
 
   return (
     <nav
-      aria-label="Paginação de artigos"
+      aria-label={label}
       className="mt-14 flex items-center justify-center gap-2"
     >
       <Link

@@ -3,6 +3,7 @@ import { Send, SearchCheck, FileCheck2, Video, Clock, Zap, Phone, Mail } from "l
 import { Portrait } from "@/components/portrait";
 import { Reveal } from "@/components/reveal";
 import { InstagramIcon } from "@/components/icons/instagram";
+import { LeadForm } from "@/components/lead-form";
 import { SITE } from "@/lib/config";
 
 const ADMIN_EMAIL = "leticiafeolii@gmail.com";
@@ -110,6 +111,16 @@ export default function ContatoPage() {
               </div>
             ))}
           </dl>
+
+          <div className="mt-8 border hairline bg-card p-5">
+            <p className="font-serif text-lg text-espresso">Prefere que a gente te retorne?</p>
+            <p className="mt-1.5 text-xs leading-relaxed text-ink/60">
+              Deixe seus dados e a Dra. Letícia Oliveira entra em contato.
+            </p>
+            <div className="mt-5">
+              <LeadForm source="contato_page" />
+            </div>
+          </div>
         </Reveal>
       </div>
     </div>

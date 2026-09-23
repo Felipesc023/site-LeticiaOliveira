@@ -32,6 +32,14 @@ export default async function AdminLayout({
               Novo artigo
             </Link>
             <Link
+              href="/admin/leads"
+              title="Ver os leads recebidos pelo site"
+              aria-label="Ver leads"
+              className="label-caps text-hazel hover:text-espresso"
+            >
+              Leads
+            </Link>
+            <Link
               href="/"
               target="_blank"
               title="Abrir o site público em outra aba"

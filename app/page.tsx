@@ -5,7 +5,8 @@ import { listArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/article-card";
 import { Reveal } from "@/components/reveal";
 import { Parallax } from "@/components/parallax";
-import { whatsappUrl, SITE } from "@/lib/config";
+import { LeadModalTrigger } from "@/components/lead-modal";
+import { SITE } from "@/lib/config";
 
 export const revalidate = 600;
 
@@ -94,19 +95,10 @@ export default async function HomePage() {
             </Reveal>
             <Reveal delay={240}>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-5 lg:justify-start">
-                <a
-                  href={whatsappUrl(
-                    "Olá, Dra. Letícia. Gostaria de tirar uma dúvida sobre um leilão de imóvel.",
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary"
-                  aria-label="Falar com a Dra. Letícia Oliveira pelo WhatsApp"
-                  title="Falar com a advogada pelo WhatsApp"
-                >
+                <LeadModalTrigger source="home_hero" className="btn btn-primary">
                   Fale com a advogada
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden />
-                </a>
+                </LeadModalTrigger>
                 <Link
                   href="/sobre"
                   className="nav-link label-caps pb-1 text-[12px] text-espresso"

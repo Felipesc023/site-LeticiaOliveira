@@ -14,6 +14,16 @@ import { AiProgress } from "@/components/admin/ai-progress";
 
 type Props = { article?: Article };
 
+/** The server always sends a specific reason in `data.error` on a handled failure;
+    this only covers the two cases that never reach it: the request itself failing
+    (offline, DNS, CORS) vs. the response coming back not-JSON (a crash or a gateway
+    timeout page instead of our API). */
+function networkErrorMessage(e: unknown): string {
+  return e instanceof SyntaxError
+    ? "O servidor demorou demais ou devolveu algo inesperado. Tente de novo."
+    : "Falha de conexão. Verifique a internet e tente de novo.";
+}
+
 export function ArticleEditor({ article }: Props) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState<SaveResult | null, FormData>(
@@ -23,7 +33,6 @@ export function ArticleEditor({ article }: Props) {
 
   const [title, setTitle] = useState(article?.title ?? "");
   const [slug, setSlug] = useState(article?.slug ?? "");
-  const [slugTouched, setSlugTouched] = useState(!!article);
   const [content, setContent] = useState(article?.content ?? "");
   const [metaDescription, setMetaDescription] = useState(article?.meta_description ?? "");
   const [coverUrl, setCoverUrl] = useState(article?.cover_url ?? "");
@@ -39,8 +48,12 @@ export function ArticleEditor({ article }: Props) {
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!slugTouched && title) setSlug(slugify(title));
-  }, [title, slugTouched]);
+    // Slug is fully automatic now — no box for her to fill in. For a brand-new
+    // article it tracks the title as she types; once an article is saved, its
+    // slug stays put even if the title changes later, so published links never
+    // break under her.
+    if (!article && title) setSlug(slugify(title));
+  }, [title, article]);
 
   useEffect(() => {
     if (state?.ok) router.push("/admin");
@@ -64,8 +77,8 @@ export function ArticleEditor({ article }: Props) {
       setContent(data.html);
       setAiSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
       setAiMsg("Correções pontuais aplicadas. O texto e as ideias continuam suas.");
-    } catch {
-      setAiMsg("Falha ao revisar");
+    } catch (e) {
+      setAiMsg(networkErrorMessage(e));
     } finally {
       setAiBusy(null);
     }
@@ -88,10 +101,9 @@ export function ArticleEditor({ article }: Props) {
       }
       setContent(data.html);
       if (data.meta_description) setMetaDescription(data.meta_description);
-      if (!slugTouched && data.slug) setSlug(slugify(data.slug));
       setAiMsg("Artigo revisado e formatado. Revise antes de publicar.");
-    } catch {
-      setAiMsg("Falha ao otimizar");
+    } catch (e) {
+      setAiMsg(networkErrorMessage(e));
     } finally {
       setAiBusy(null);
     }
@@ -112,10 +124,10 @@ export function ArticleEditor({ article }: Props) {
         return;
       }
       setMetaDescription(data.meta_description ?? metaDescription);
-      if (!slugTouched && data.slug) setSlug(slugify(data.slug));
-      setAiMsg("Metadados sugeridos.");
-    } catch {
-      setAiMsg("Falha na sugestão");
+      if (data.title) setTitle(data.title);
+      setAiMsg("Título e subtítulo sugeridos.");
+    } catch (e) {
+      setAiMsg(networkErrorMessage(e));
     } finally {
       setAiBusy(null);
     }
@@ -128,6 +140,7 @@ export function ArticleEditor({ article }: Props) {
         <input type="hidden" name="content" value={content} />
         <input type="hidden" name="cover_url" value={coverUrl} />
         <input type="hidden" name="cover_credit" value={coverCredit} />
+        <input type="hidden" name="slug" value={slug} />
 
         <Field label="Título">
           <input
@@ -139,32 +152,19 @@ export function ArticleEditor({ article }: Props) {
           />
         </Field>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Slug (URL)">
-            <input
-              name="slug"
-              value={slug}
-              onChange={(e) => {
-                setSlug(e.target.value);
-                setSlugTouched(true);
-              }}
-              className="w-full border hairline bg-card px-3 py-2 text-sm outline-none focus:border-espresso"
-            />
-          </Field>
-          <Field label="Categoria">
-            <select
-              name="category"
-              defaultValue={article?.category ?? CATEGORIES[0].slug}
-              className="w-full border hairline bg-card px-3 py-2 text-sm outline-none focus:border-espresso"
-            >
-              {CATEGORIES.map((c) => (
-                <option key={c.slug} value={c.slug}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-          </Field>
-        </div>
+        <Field label="Categoria">
+          <select
+            name="category"
+            defaultValue={article?.category ?? CATEGORIES[0].slug}
+            className="w-full border hairline bg-card px-3 py-2 text-sm outline-none focus:border-espresso sm:max-w-xs"
+          >
+            {CATEGORIES.map((c) => (
+              <option key={c.slug} value={c.slug}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </Field>
 
         <Field label="Conteúdo">
           <RichEditor html={content} onChange={setContent} />
@@ -210,7 +210,7 @@ export function ArticleEditor({ article }: Props) {
           </div>
         </Field>
 
-        <Field label="Meta description (SEO)">
+        <Field label="Subtítulo">
           <textarea
             name="meta_description"
             value={metaDescription}
@@ -286,7 +286,7 @@ export function ArticleEditor({ article }: Props) {
             Cole o rascunho no editor. "Revisar sem reescrever" só corrige
             gramática e ortografia, mantendo suas palavras, e sugere ideias de
             organização à parte. "Otimizar e formatar" reescreve e formata o
-            artigo inteiro, com destaques e SEO.
+            artigo inteiro, com destaques e subtítulo.
           </p>
           <button
             type="button"
@@ -303,7 +303,7 @@ export function ArticleEditor({ article }: Props) {
             type="button"
             onClick={runOptimize}
             disabled={aiBusy !== null}
-            title="Reescreve, formata e sugere SEO automaticamente"
+            title="Reescreve, formata e sugere um subtítulo automaticamente"
             aria-label="Otimizar e formatar o artigo inteiro com IA"
             className="btn btn-primary btn-sm mt-2 w-full"
           >
@@ -314,11 +314,11 @@ export function ArticleEditor({ article }: Props) {
             type="button"
             onClick={runSeo}
             disabled={aiBusy !== null}
-            title="Sugere só meta description, slug e palavras-chave"
-            aria-label="Sugerir apenas os metadados de SEO"
+            title="Sugere só o título e o subtítulo do artigo"
+            aria-label="Sugerir apenas título e subtítulo"
             className="btn btn-ghost btn-sm mt-2 w-full"
           >
-            {aiBusy === "seo" ? "Gerando…" : "Só sugerir SEO"}
+            {aiBusy === "seo" ? "Gerando…" : "Só sugerir subtítulo e título"}
           </button>
           {aiBusy && <AiProgress kind={aiBusy} />}
           {!aiBusy && aiMsg && <p className="mt-3 text-xs text-hazel">{aiMsg}</p>}

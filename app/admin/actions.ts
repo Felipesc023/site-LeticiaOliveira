@@ -85,6 +85,17 @@ export async function deleteArticle(id: string): Promise<void> {
   redirect("/admin");
 }
 
+export async function toggleLeadStatus(id: string, current: string): Promise<void> {
+  const admin = await getAdmin();
+  if (!admin) redirect("/entrar");
+  const supabase = await createClient();
+  await supabase
+    .from("leads")
+    .update({ status: current === "novo" ? "contatado" : "novo" })
+    .eq("id", id);
+  revalidatePath("/admin/leads");
+}
+
 export async function signOut(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();

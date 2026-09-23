@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdmin } from "@/lib/admin";
 import { rateLimit } from "@/lib/ratelimit";
-import { suggestSeo, AiUnavailableError } from "@/lib/ai";
+import { suggestSeo, AiUnavailableError, describeAiError } from "@/lib/ai";
 
 export const runtime = "nodejs";
 
@@ -25,6 +25,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "IA indisponível" }, { status: 503 });
     }
     console.error("ai/seo", err);
-    return NextResponse.json({ error: "falha na sugestão" }, { status: 502 });
+    return NextResponse.json({ error: describeAiError(err) }, { status: 502 });
   }
 }

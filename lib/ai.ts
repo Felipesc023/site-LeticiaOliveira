@@ -18,6 +18,30 @@ function client(): GoogleGenAI {
   return new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 }
 
+/** Turns whatever the SDK/JSON-parsing threw into a message Letícia can actually
+    act on, instead of a bare "falha ao revisar" every time. Never echoes the raw
+    error (could leak internals) — just names the likely cause in plain terms. */
+export function describeAiError(err: unknown): string {
+  const msg = err instanceof Error ? err.message : String(err);
+  const low = msg.toLowerCase();
+  if (low.includes("json incompleto") || low.includes("resposta sem json")) {
+    return "O texto gerado ficou grande demais e a resposta foi cortada no meio. Tente revisar um trecho menor por vez.";
+  }
+  if (low.includes("429") || low.includes("quota") || low.includes("resource_exhausted") || low.includes("rate")) {
+    return "A IA atingiu o limite de uso do momento. Espere um minuto e tente de novo.";
+  }
+  if (low.includes("503") || low.includes("unavailable") || low.includes("overloaded")) {
+    return "A IA está sobrecarregada agora. Tente de novo em instantes.";
+  }
+  if (low.includes("timeout") || low.includes("etimedout") || low.includes("fetch failed") || low.includes("network")) {
+    return "Falha de conexão com a IA. Verifique a internet e tente de novo.";
+  }
+  if (low.includes("api key") || low.includes("401") || low.includes("403") || low.includes("permission")) {
+    return "A chave da IA foi recusada. Avise o suporte técnico do site.";
+  }
+  return "Não foi possível concluir agora. Tente de novo em instantes.";
+}
+
 /** Shared into every prompt — the giveaways that make text read as
     AI-written instead of as something Letícia actually wrote. */
 const HUMAN_VOICE_RULES = `
@@ -48,8 +72,9 @@ async function askJson<T>(
 
 // ── Otimizar e formatar artigo ───────────────────────────────────────────────
 
-export interface OptimizedArticle extends AiSeo {
+export interface OptimizedArticle {
   html: string;
+  meta_description: string;
 }
 
 const OPTIMIZE_SYSTEM = `Você é editor(a) do blog de uma advogada especialista em leilões de imóveis (judiciais e extrajudiciais), no Brasil.
@@ -75,11 +100,10 @@ Regras dos destaques:
 - Sem <div>, <span>, style, classes, imagens ou headings dentro de <aside>.
 
 METADADOS:
-- meta_description: 1 frase, 120-158 caracteres, sem clickbait.
-- slug: minúsculas, sem acentos, palavras com hífen, curto.
+- meta_description: o subtítulo/resumo do artigo, 1 frase, 120-158 caracteres, sem clickbait.
 ${HUMAN_VOICE_RULES}`;
 
-const OPTIMIZE_SHAPE = `{"html":"<h2>...</h2><p>...</p>","meta_description":"...","slug":"..."}`;
+const OPTIMIZE_SHAPE = `{"html":"<h2>...</h2><p>...</p>","meta_description":"..."}`;
 
 export async function optimizeArticle(
   title: string,
@@ -94,28 +118,27 @@ export async function optimizeArticle(
   return {
     html: sanitizeArticleHtml(String(out.html ?? "")) || "<p></p>",
     meta_description: String(out.meta_description ?? ""),
-    slug: String(out.slug ?? ""),
   };
 }
 
-// ── Sugestão de SEO (ação rápida secundária) ─────────────────────────────────
+// ── Sugestão de título e subtítulo (ação rápida secundária) ──────────────────
 
-const SEO_SYSTEM = `Você gera metadados de SEO em português para um artigo de blog jurídico sobre leilões de imóveis.
-- meta_description: 1 frase, 120-158 caracteres, sem clickbait.
-- slug: curto, em minúsculas, palavras separadas por hífen, sem acentos.
+const SEO_SYSTEM = `Você sugere título e subtítulo em português para um artigo de blog jurídico sobre leilões de imóveis, a partir do conteúdo já escrito.
+- title: chamada direta do assunto do artigo, sem clickbait, no mesmo tom sóbrio do resto do texto.
+- meta_description: o subtítulo/resumo do artigo, 1 frase, 120-158 caracteres, sem clickbait.
 ${HUMAN_VOICE_RULES}`;
 
-const SEO_SHAPE = `{"meta_description":"...","slug":"..."}`;
+const SEO_SHAPE = `{"title":"...","meta_description":"..."}`;
 
 export async function suggestSeo(title: string, content: string): Promise<AiSeo> {
   const seo = await askJson<AiSeo>(
     SEO_SYSTEM,
-    `Título: ${title}\n\nConteúdo:\n${content.slice(0, 6000)}`,
+    `Título atual: ${title}\n\nConteúdo:\n${content.slice(0, 6000)}`,
     SEO_SHAPE,
   );
   return {
+    title: String(seo.title ?? ""),
     meta_description: String(seo.meta_description ?? ""),
-    slug: String(seo.slug ?? ""),
   };
 }
 
