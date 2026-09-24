@@ -6,8 +6,8 @@ import { SITE } from "@/lib/config";
 
 const KEY = "lo-consent";
 
-/** GA4 + LGPD consent banner (DESIGN.md §31/§32). GA only loads after opt-in.
-    No GA id configured → nothing renders. */
+/** GA4 + GTM + LGPD consent banner (DESIGN.md §31/§32). Both only load after
+    opt-in. No id configured for either → that script doesn't render. */
 export function Analytics() {
   const [choice, setChoice] = useState<"granted" | "denied" | null>(null);
 
@@ -29,20 +29,33 @@ export function Analytics() {
     setChoice(v);
   };
 
-  if (!SITE.gaId) return null;
+  if (!SITE.gaId && !SITE.gtmId) return null;
 
   return (
     <>
       {choice === "granted" && (
         <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaId}`}
-            strategy="afterInteractive"
-          />
-          <Script id="ga-init" strategy="afterInteractive">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+          {SITE.gaId && (
+            <>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaId}`}
+                strategy="afterInteractive"
+              />
+              <Script id="ga-init" strategy="afterInteractive">
+                {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
 gtag('js',new Date());gtag('config','${SITE.gaId}',{anonymize_ip:true});`}
-          </Script>
+              </Script>
+            </>
+          )}
+          {SITE.gtmId && (
+            <Script id="gtm-init" strategy="afterInteractive">
+              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${SITE.gtmId}');`}
+            </Script>
+          )}
         </>
       )}
 

@@ -7,6 +7,7 @@ export const SITE = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP ?? "",
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
+  gtmId: process.env.NEXT_PUBLIC_GTM_ID ?? "",
 } as const;
 
 export const CATEGORIES = [

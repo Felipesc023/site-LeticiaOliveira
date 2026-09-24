@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import { SITE } from "@/lib/config";
+import { GtmNoscript } from "@/components/gtm-noscript";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsappFloat } from "@/components/whatsapp-float";
@@ -50,6 +51,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${serif.variable} ${sans.variable}`}>
       <body>
+        <GtmNoscript />
         <OAuthCodeRedirect />
         <NavProgress />
         <SiteHeader />
