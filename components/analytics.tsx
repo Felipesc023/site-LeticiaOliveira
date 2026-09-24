@@ -63,9 +63,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div
           role="dialog"
           aria-label="Aviso de cookies"
-          className="fixed inset-x-0 bottom-0 z-50 border-t hairline bg-card px-5 py-4 md:px-20"
+          className="fixed inset-x-0 bottom-0 z-50 border-t hairline bg-card px-5 py-4 shadow-[0_-8px_24px_-12px_rgba(61,43,31,0.18)] md:px-20"
+          style={{ animation: "rise-in 0.5s cubic-bezier(0.16,1,0.3,1) both" }}
         >
-          <div className="mx-auto flex max-w-[var(--container-max)] flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+          <div className="mx-auto flex max-w-[var(--container-max)] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <p className="max-w-2xl text-sm text-ink/80">
               Usamos cookies de análise (Google Analytics) para entender o uso do
               site. Veja a{" "}
@@ -74,18 +75,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               </a>
               .
             </p>
-            <div className="flex shrink-0 gap-2">
+            <div className="flex shrink-0 gap-3">
               <button
                 type="button"
                 onClick={() => decide("denied")}
-                className="label-caps border border-espresso px-4 py-2 text-[11px] text-espresso"
+                className="btn btn-secondary btn-sm"
               >
                 Recusar
               </button>
               <button
                 type="button"
                 onClick={() => decide("granted")}
-                className="label-caps border border-espresso bg-espresso px-4 py-2 text-[11px] text-canvas"
+                className="btn btn-primary btn-sm"
               >
                 Aceitar
               </button>
